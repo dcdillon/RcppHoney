@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // test_binary_operators
-std::vector< double > test_binary_operators(std::vector< int > v, std::vector< double > v2);
+Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2);
 RcppExport SEXP RcppHoney_test_binary_operators(SEXP vSEXP, SEXP v2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
@@ -18,7 +18,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_unary_operators
-std::vector< int > test_unary_operators(std::vector< int > v);
+Rcpp::NumericVector test_unary_operators(std::vector< int > v);
 RcppExport SEXP RcppHoney_test_unary_operators(SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
@@ -29,7 +29,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_unary_functions
-std::vector< double > test_unary_functions(std::vector< int > v);
+Rcpp::NumericVector test_unary_functions(std::vector< int > v);
 RcppExport SEXP RcppHoney_test_unary_functions(SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;

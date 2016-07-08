@@ -22,11 +22,16 @@ namespace RcppHoney {
 template< typename T, typename T_ITER, typename T_RESULT >
 class operand;
 
-namespace traits {
-    
 template< typename T >
 class hook;
     
-} // namespace traits
-    
 } // namespace RcppHoney
+
+namespace Rcpp {
+namespace traits {
+    
+template< typename T, typename T_ITER, typename T_RESULT > SEXP wrap(
+    const RcppHoney::operand< T, T_ITER, T_RESULT > &obj);
+
+} // namespace traits
+} // namespace Rcpp

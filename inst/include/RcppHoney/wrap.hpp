@@ -17,9 +17,15 @@
 
 #pragma once
 
-#include <RcppCommon.h>
-#include "RcppHoneyForward.hpp"
-#include <Rcpp.h>
-#include "RcppHoney/wrap.hpp"
-#include "RcppHoney/operators.hpp"
-#include "RcppHoney/functions.hpp"
+namespace Rcpp {
+namespace traits {
+    
+template< typename T, typename T_ITER, typename T_RESULT > SEXP wrap(
+    const RcppHoney::operand< T, T_ITER, T_RESULT > &obj) {
+
+    const int RTYPE = Rcpp::traits::r_sexptype_traits< T_RESULT >::rtype;
+    return Rcpp::Vector< RTYPE >(obj.begin(), obj.end());
+}
+    
+} // namespace traits
+} // namespace Rcpp

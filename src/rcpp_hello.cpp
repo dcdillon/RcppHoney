@@ -1,5 +1,3 @@
-#include <RcppHoneyForward.hpp>
-#include <Rcpp.h>
 #include <RcppHoney.hpp>
 #include <vector>
 
@@ -65,19 +63,16 @@ public:
 } // namespace RcppHoney
 
 // [[Rcpp::export]]
-std::vector< double > test_binary_operators(std::vector< int > v, std::vector< double > v2) {
-    RcppHoney::hook< std::vector< double > > retval = v + v2 + 1 + v + v + 2;
-    return retval;
+Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2) {
+    return Rcpp::wrap(v + v2 + 1 + v + v + 2);
 }
 
 // [[Rcpp::export]]
-std::vector< int > test_unary_operators(std::vector< int > v) {
-    RcppHoney::hook< std::vector< int > > retval = -v + v;
-    return retval;
+Rcpp::NumericVector test_unary_operators(std::vector< int > v) {
+    return Rcpp::wrap(-v + v);
 }
 
 // [[Rcpp::export]]
-std::vector< double > test_unary_functions(std::vector< int > v) {
-    RcppHoney::hook< std::vector< double > > retval = RcppHoney::sqrt(RcppHoney::log(v) + RcppHoney::exp(v));
-    return retval;
+Rcpp::NumericVector test_unary_functions(std::vector< int > v) {
+    return Rcpp::wrap(RcppHoney::sqrt(RcppHoney::log(v) + RcppHoney::exp(v)));
 }
