@@ -689,5 +689,23 @@ struct trunc {
     }
 };
 
+template< typename Iterator, bool NA >
+struct diff {
+    typedef typename std::iterator_traits< Iterator >::value_type return_type;
+    
+    return_type operator()(Iterator &current) const {
+        if (NA) {
+            if (na< typename traits::ctype< return_type >::type >::is_na(*current)
+                || na< typename traits::ctype< return_type >::type >::is_na(*(current - 1))) {
+                return na< return_type >::VALUE();
+            } else {
+                return *current - *(current - 1);
+            }
+        } else {
+            return *current - *(current - 1);
+        }
+    }
+};
+
 } // namespace functors
 } // namespace RcppHoney

@@ -76,3 +76,8 @@ Rcpp::NumericVector test_unary_operators(std::vector< int > v) {
 Rcpp::NumericVector test_unary_functions(std::vector< int > v) {
     return Rcpp::wrap(RcppHoney::sqrt(RcppHoney::log(v) + RcppHoney::exp(v)));
 }
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_diff_function(std::vector< int > v) {
+    return Rcpp::wrap(RcppHoney::diff(v));
+}

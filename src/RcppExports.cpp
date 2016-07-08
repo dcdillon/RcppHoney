@@ -39,3 +39,14 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// test_diff_function
+Rcpp::NumericVector test_diff_function(std::vector< int > v);
+RcppExport SEXP RcppHoney_test_diff_function(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< std::vector< int > >::type v(vSEXP);
+    __result = Rcpp::wrap(test_diff_function(v));
+    return __result;
+END_RCPP
+}
