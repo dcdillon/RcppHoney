@@ -1,3 +1,20 @@
+// Copyright (C) 2016 Daniel C. Dillon
+//
+// This file is part of RcppHoney.
+//
+// Rcpp is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// RcppHoney is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with RcppHoney.  If not, see <http://www.gnu.org/licenses/>.
+
 #include "traits/widest_numeric_type.hpp"
 #include "traits/ctype.hpp"
 #include "na.hpp"
@@ -29,7 +46,7 @@ struct minus {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
-    
+
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
@@ -43,13 +60,13 @@ struct minus {
         }
     }
 };
-    
+
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct times {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
-    
+
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
@@ -69,7 +86,7 @@ struct divided_by {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
-    
+
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
@@ -93,10 +110,10 @@ struct greater {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
                 && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-            
+
                 return *lhs > *rhs;
             }
-            
+
             return na< return_type >::VALUE();
         } else {
             return *lhs > *rhs;
@@ -113,10 +130,10 @@ struct greater_equal {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
                 && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-            
+
                 return *lhs >= *rhs;
             }
-            
+
             return na< return_type >::VALUE();
         } else {
             return *lhs >= *rhs;
@@ -133,10 +150,10 @@ struct less {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
                 && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-            
+
                 return *lhs < *rhs;
             }
-            
+
             return na< return_type >::VALUE();
         } else {
             return *lhs < *rhs;
@@ -153,10 +170,10 @@ struct less_equal {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
                 && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-            
+
                 return *lhs <= *rhs;
             }
-            
+
             return na< return_type >::VALUE();
         } else {
             return *lhs <= *rhs;
@@ -173,10 +190,10 @@ struct equal {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
                 && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-            
+
                 return *lhs == *rhs;
             }
-            
+
             return na< return_type >::VALUE();
         } else {
             return *lhs == *rhs;
@@ -193,10 +210,10 @@ struct not_equal {
         if (NA) {
             if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
                 && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-            
+
                 return *lhs != *rhs;
             }
-            
+
             return na< return_type >::VALUE();
         } else {
             return *lhs != *rhs;
@@ -212,7 +229,7 @@ struct unary_minus {
             if (!na< typename traits::ctype< return_type >::type >::is_na(*rhs)) {
                 return -(*rhs);
             }
-            
+
             return na< return_type >::VALUE();
         } else {
             return -(*rhs);
@@ -228,7 +245,7 @@ struct unary_not {
             if (!na< typename traits::ctype< return_type >::type >::is_na(*rhs)) {
                 return !(*rhs);
             }
-            
+
             return na< return_type >::VALUE();
         } else {
             return !(*rhs);

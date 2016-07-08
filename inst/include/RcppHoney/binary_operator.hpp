@@ -1,3 +1,20 @@
+// Copyright (C) 2016 Daniel C. Dillon
+//
+// This file is part of RcppHoney.
+//
+// Rcpp is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// RcppHoney is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with RcppHoney.  If not, see <http://www.gnu.org/licenses/>.
+
 #pragma once
 
 #include <iterator>
@@ -85,7 +102,7 @@ public:
     inline bool operator!=(const binary_operator_iterator &rhs) const {
         return !operator==(rhs);
     }
-    
+
     inline typename Op::return_type operator[](ptrdiff_t n) const {
         return *(*this + n);
     }
@@ -105,11 +122,11 @@ class binary_operator : public operand< binary_operator< LhsIterator, RhsIterato
 public:
     typedef typename Op::return_type result_type;
     static const bool NA = NA_VALUE;
-    
+
 public:
     typedef binary_operator_iterator< LhsIterator, RhsIterator, Op, NA_VALUE > const_iterator;
     typedef const_iterator iterator;
-    
+
 private:
     LhsIterator m_lhsBegin;
     LhsIterator m_lhsEnd;

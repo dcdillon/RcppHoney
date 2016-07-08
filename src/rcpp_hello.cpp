@@ -1,8 +1,11 @@
 #include <Rcpp.h>
 #include <vector>
+#include <RcppHoney/operators.hpp>
 
-#include <RcppHoney/operand.hpp>
-#include <RcppHoney/hook.hpp>
+using namespace Rcpp;
+
+// Create hooks for std::vector< int > and std::vector< double >
+
 namespace RcppHoney {
 
 template<>
@@ -58,10 +61,6 @@ public:
 };
 
 } // namespace RcppHoney
-
-#include <RcppHoney/operators.hpp>
-
-using namespace Rcpp;
 
 // [[Rcpp::export]]
 std::vector< double > test_binary_operators(std::vector< int > v, std::vector< double > v2) {
