@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Rcpp/r/headers.h>
+#include "../r_headers.hpp"
 #include "ctype.hpp"
 #include "if_else.hpp"
 
