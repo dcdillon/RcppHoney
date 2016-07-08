@@ -204,5 +204,37 @@ struct not_equal {
     }
 };
 
+template< typename RhsIterator, bool NA = true >
+struct unary_minus {
+    typedef typename std::iterator_traits< RhsIterator >::value_type return_type;
+    inline return_type operator()(RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< return_type >::type >::is_na(*rhs)) {
+                return -(*rhs);
+            }
+            
+            return na< return_type >::VALUE();
+        } else {
+            return -(*rhs);
+        }
+    }
+};
+
+template< typename RhsIterator, bool NA = true >
+struct unary_not {
+    typedef typename std::iterator_traits< RhsIterator >::value_type return_type;
+    inline return_type operator()(RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< return_type >::type >::is_na(*rhs)) {
+                return !(*rhs);
+            }
+            
+            return na< return_type >::VALUE();
+        } else {
+            return !(*rhs);
+        }
+    }
+};
+
 } // namespace functors
 } // namespace RcppHoney

@@ -64,7 +64,13 @@ public:
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-std::vector< double > test_vector(std::vector< int > v, std::vector< double > v2) {
+std::vector< double > test_binary_operators(std::vector< int > v, std::vector< double > v2) {
     RcppHoney::hook< std::vector< double > > retval = v + v2 + 1 + v + v + 2;
+    return retval;
+}
+
+// [[Rcpp::export]]
+std::vector< int > test_unary_operators(std::vector< int > v) {
+    RcppHoney::hook< std::vector< int > > retval = -v + v;
     return retval;
 }

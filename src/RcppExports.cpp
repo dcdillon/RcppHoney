@@ -5,15 +5,26 @@
 
 using namespace Rcpp;
 
-// test_vector
-std::vector< double > test_vector(std::vector< int > v, std::vector< double > v2);
-RcppExport SEXP RcppHoney_test_vector(SEXP vSEXP, SEXP v2SEXP) {
+// test_binary_operators
+std::vector< double > test_binary_operators(std::vector< int > v, std::vector< double > v2);
+RcppExport SEXP RcppHoney_test_binary_operators(SEXP vSEXP, SEXP v2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< std::vector< int > >::type v(vSEXP);
     Rcpp::traits::input_parameter< std::vector< double > >::type v2(v2SEXP);
-    __result = Rcpp::wrap(test_vector(v, v2));
+    __result = Rcpp::wrap(test_binary_operators(v, v2));
+    return __result;
+END_RCPP
+}
+// test_unary_operators
+std::vector< int > test_unary_operators(std::vector< int > v);
+RcppExport SEXP RcppHoney_test_unary_operators(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< std::vector< int > >::type v(vSEXP);
+    __result = Rcpp::wrap(test_unary_operators(v));
     return __result;
 END_RCPP
 }

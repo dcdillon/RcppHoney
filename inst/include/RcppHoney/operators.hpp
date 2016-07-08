@@ -130,3 +130,27 @@ RCPP_HONEY_GENERATE_BINARY_OPERATOR(<, less)
 RCPP_HONEY_GENERATE_BINARY_OPERATOR(<=, less_equal)
 RCPP_HONEY_GENERATE_BINARY_OPERATOR(==, equal)
 RCPP_HONEY_GENERATE_BINARY_OPERATOR(!=, not_equal)
+
+#define RCPP_HONEY_GENERATE_UNARY_OPERATOR(_OP_, _FUNCTOR_)                                                             \
+template< typename T, typename T_ITER, typename T_RESULT >                                                              \
+RcppHoney::unary_operator< T_ITER, RcppHoney::functors:: _FUNCTOR_ < T_ITER, T::NA >, T::NA >                           \
+operator _OP_ (const RcppHoney::operand< T, T_ITER, T_RESULT > &rhs) {                                                  \
+    return RcppHoney::make_unary_operator< T::NA >()(rhs, RcppHoney::functors:: _FUNCTOR_ < T_ITER, T::NA >());         \
+}                                                                                                                       \
+                                                                                                                        \
+template< typename T >                                                                                                  \
+typename RcppHoney::traits::enable_if<                                                                                  \
+    RcppHoney::hook< T >::value,                                                                                        \
+    RcppHoney::unary_operator<                                                                                          \
+        typename RcppHoney::hook< T >::const_iterator,                                                                  \
+        RcppHoney::functors:: _FUNCTOR_ < typename RcppHoney::hook< T >::const_iterator, RcppHoney::hook< T >::NA >,    \
+        RcppHoney::hook< T >::NA                                                                                        \
+    >                                                                                                                   \
+>::type                                                                                                                 \
+operator _OP_ (const T &rhs) {                                                                                          \
+    return RcppHoney::make_unary_operator< RcppHoney::hook< T >::NA >()(rhs,                                            \
+        RcppHoney::functors::unary_minus< typename RcppHoney::hook< T >::const_iterator, RcppHoney::hook< T >::NA >()); \
+}
+
+RCPP_HONEY_GENERATE_UNARY_OPERATOR(-, unary_minus)
+RCPP_HONEY_GENERATE_UNARY_OPERATOR(!, unary_not)
