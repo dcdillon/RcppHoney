@@ -1,6 +1,8 @@
+#include <RcppHoney/operators.hpp>
+#include <RcppHoney/functions.hpp>
 #include <Rcpp.h>
 #include <vector>
-#include <RcppHoney/operators.hpp>
+
 
 using namespace Rcpp;
 
@@ -71,5 +73,11 @@ std::vector< double > test_binary_operators(std::vector< int > v, std::vector< d
 // [[Rcpp::export]]
 std::vector< int > test_unary_operators(std::vector< int > v) {
     RcppHoney::hook< std::vector< int > > retval = -v + v;
+    return retval;
+}
+
+// [[Rcpp::export]]
+std::vector< double > test_unary_functions(std::vector< int > v) {
+    RcppHoney::hook< std::vector< double > > retval = RcppHoney::sqrt(RcppHoney::log(v) + RcppHoney::exp(v));
     return retval;
 }

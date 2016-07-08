@@ -2,7 +2,7 @@
 //
 // This file is part of RcppHoney.
 //
-// Rcpp is free software: you can redistribute it and/or modify it
+// RcppHoney is free software: you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 2 of the License, or
 // (at your option) any later version.
@@ -35,7 +35,7 @@ inline RcppHoney::binary_operator< T_ITER, U_ITER,                              
 operator _OP_ (const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs,                                                   \
     const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {                                                            \
                                                                                                                        \
-    return Rcpp::algorithm::helpers::make_binary_operator< (T::NA || U::NA) >()(                                       \
+    return RcppHoney::make_binary_operator< (T::NA || U::NA) >()(                                       \
         lhs, rhs,                                                                                                      \
         RcppHoney::functors:: _FUNCTOR_ < T_ITER, U_ITER, (T::NA || U::NA) >());                                       \
 }                                                                                                                      \

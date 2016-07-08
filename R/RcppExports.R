@@ -9,3 +9,7 @@ test_unary_operators <- function(v) {
     .Call('RcppHoney_test_unary_operators', PACKAGE = 'RcppHoney', v)
 }
 
+test_unary_functions <- function(v) {
+    .Call('RcppHoney_test_unary_functions', PACKAGE = 'RcppHoney', v)
+}
+
