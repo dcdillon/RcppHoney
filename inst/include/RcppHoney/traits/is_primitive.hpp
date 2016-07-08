@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Rcpp/r/headers.h>
+#include <Rcpp.h>
 
 namespace RcppHoney {
 namespace traits {

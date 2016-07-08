@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "r_headers.hpp"
+#include <Rcpp.h>
 
 namespace RcppHoney {
 

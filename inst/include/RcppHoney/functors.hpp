@@ -17,9 +17,8 @@
 
 #pragma once
 
+#include <Rcpp.h>
 #include <cmath>
-#include <Rmath.h>
-#include "r_headers.hpp"
 #include "traits/widest_numeric_type.hpp"
 #include "traits/ctype.hpp"
 #include "na.hpp"

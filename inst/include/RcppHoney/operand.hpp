@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <Rcpp.h>
 #include <stdint.h>
 #include <cstddef>
 

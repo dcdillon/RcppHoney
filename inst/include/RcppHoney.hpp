@@ -17,19 +17,6 @@
 
 #pragma once
 
-#include <Rcpp.h>
-
-namespace RcppHoney {
-namespace traits {
-
-template< bool VAL, typename T >
-struct enable_if {
-};
-
-template< typename T >
-struct enable_if< true, T > {
-    typedef T type;
-};
-
-} // namespace traits
-} // namespace RcppHoney
+#include "RcppHoneyForward.hpp"
+#include "RcppHoney/operators.hpp"
+#include "RcppHoney/functions.hpp"

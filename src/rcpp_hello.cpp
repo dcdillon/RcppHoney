@@ -1,6 +1,6 @@
-#include <RcppHoney/operators.hpp>
-#include <RcppHoney/functions.hpp>
+#include <RcppHoneyForward.hpp>
 #include <Rcpp.h>
+#include <RcppHoney.hpp>
 #include <vector>
 
 

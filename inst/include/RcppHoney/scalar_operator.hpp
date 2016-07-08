@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <Rcpp.h>
 #include <iterator>
 #include <algorithm>
 #include <cstddef>

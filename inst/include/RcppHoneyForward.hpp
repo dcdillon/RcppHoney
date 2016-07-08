@@ -17,19 +17,16 @@
 
 #pragma once
 
-#include <Rcpp.h>
-
 namespace RcppHoney {
+    
+template< typename T, typename T_ITER, typename T_RESULT >
+class operand;
+
 namespace traits {
-
-template< bool VAL, typename T >
-struct enable_if {
-};
-
+    
 template< typename T >
-struct enable_if< true, T > {
-    typedef T type;
-};
-
+class hook;
+    
 } // namespace traits
+    
 } // namespace RcppHoney

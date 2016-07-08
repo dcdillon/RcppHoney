@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <Rcpp.h>
 #include "operand.hpp"
 #include "scalar_operator.hpp"
 #include "unary_operator.hpp"
@@ -26,7 +27,7 @@
 #include "traits/enable_if.hpp"
 
 namespace RcppHoney {
-    
+
 #define RCPP_HONEY_GENERATE_UNARY_FUNCTION(_FNAME_)                                     \
 template< typename T, typename T_ITER, typename T_RESULT >                              \
 unary_operator< T_ITER, functors:: _FNAME_ < T_ITER, T::NA >, T::NA >                   \
@@ -77,5 +78,5 @@ RCPP_HONEY_GENERATE_UNARY_FUNCTION(factorial)
 RCPP_HONEY_GENERATE_UNARY_FUNCTION(lfactorial)
 RCPP_HONEY_GENERATE_UNARY_FUNCTION(trunc)
 
-    
+
 } // namespace RcppHoney
