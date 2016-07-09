@@ -9,6 +9,6 @@ Description: Creates an easy way to use expression templates with R
 License: GPL (>= 2)
 LazyData: TRUE
 Imports:
-    Rcpp (>= 0.12.5.3)
+    Rcpp (>= 0.12.5)
 LinkingTo:
     Rcpp
