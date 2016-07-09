@@ -17,3 +17,23 @@ test_diff_function <- function(v) {
     .Call('RcppHoney_test_diff_function', PACKAGE = 'RcppHoney', v)
 }
 
+test_sugar_diff_function <- function(v) {
+    .Call('RcppHoney_test_sugar_diff_function', PACKAGE = 'RcppHoney', v)
+}
+
+test_naive_diff_function <- function(v) {
+    .Call('RcppHoney_test_naive_diff_function', PACKAGE = 'RcppHoney', v)
+}
+
+test_diff_function2 <- function() {
+    .Call('RcppHoney_test_diff_function2', PACKAGE = 'RcppHoney')
+}
+
+test_sugar_diff_function2 <- function() {
+    .Call('RcppHoney_test_sugar_diff_function2', PACKAGE = 'RcppHoney')
+}
+
+test_naive_diff_function2 <- function() {
+    .Call('RcppHoney_test_naive_diff_function2', PACKAGE = 'RcppHoney')
+}
+

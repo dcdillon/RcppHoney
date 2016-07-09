@@ -78,6 +78,54 @@ Rcpp::NumericVector test_unary_functions(std::vector< int > v) {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_diff_function(std::vector< int > v) {
+Rcpp::IntegerVector test_diff_function(std::vector< int > v) {
     return Rcpp::wrap(RcppHoney::diff(v));
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector test_sugar_diff_function(IntegerVector v) {
+    return Rcpp::diff(v);
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector test_naive_diff_function(std::vector< int > v) {
+    std::vector< int > x;
+    x.reserve(v.size());
+
+    std::vector< int >::iterator i = v.begin() + 1;
+
+    for ( ; i != v.end(); ++i)
+    {
+        x.push_back(*i - (*(i - 1)));
+    }
+
+    return Rcpp::wrap(x);
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector test_diff_function2() {
+    std::vector< int > v(100000, 1);
+    return Rcpp::wrap(RcppHoney::diff(v));
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector test_sugar_diff_function2() {
+    IntegerVector v(100000, 1);
+    return Rcpp::diff(v);
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector test_naive_diff_function2() {
+    std::vector< int > v(100000, 1);
+    std::vector< int > x;
+    x.reserve(v.size());
+
+    std::vector< int >::iterator i = v.begin() + 1;
+
+    for ( ; i != v.end(); ++i)
+    {
+        x.push_back(*i - (*(i - 1)));
+    }
+
+    return Rcpp::wrap(x);
 }

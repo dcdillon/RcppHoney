@@ -40,13 +40,65 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_diff_function
-Rcpp::NumericVector test_diff_function(std::vector< int > v);
+Rcpp::IntegerVector test_diff_function(std::vector< int > v);
 RcppExport SEXP RcppHoney_test_diff_function(SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< std::vector< int > >::type v(vSEXP);
     __result = Rcpp::wrap(test_diff_function(v));
+    return __result;
+END_RCPP
+}
+// test_sugar_diff_function
+Rcpp::IntegerVector test_sugar_diff_function(IntegerVector v);
+RcppExport SEXP RcppHoney_test_sugar_diff_function(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type v(vSEXP);
+    __result = Rcpp::wrap(test_sugar_diff_function(v));
+    return __result;
+END_RCPP
+}
+// test_naive_diff_function
+Rcpp::IntegerVector test_naive_diff_function(std::vector< int > v);
+RcppExport SEXP RcppHoney_test_naive_diff_function(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< std::vector< int > >::type v(vSEXP);
+    __result = Rcpp::wrap(test_naive_diff_function(v));
+    return __result;
+END_RCPP
+}
+// test_diff_function2
+Rcpp::IntegerVector test_diff_function2();
+RcppExport SEXP RcppHoney_test_diff_function2() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(test_diff_function2());
+    return __result;
+END_RCPP
+}
+// test_sugar_diff_function2
+Rcpp::IntegerVector test_sugar_diff_function2();
+RcppExport SEXP RcppHoney_test_sugar_diff_function2() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(test_sugar_diff_function2());
+    return __result;
+END_RCPP
+}
+// test_naive_diff_function2
+Rcpp::IntegerVector test_naive_diff_function2();
+RcppExport SEXP RcppHoney_test_naive_diff_function2() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(test_naive_diff_function2());
     return __result;
 END_RCPP
 }

@@ -692,19 +692,34 @@ struct trunc {
 template< typename Iterator, bool NA >
 struct diff {
     typedef typename std::iterator_traits< Iterator >::value_type return_type;
-    
+
     return_type operator()(Iterator &current) const {
+        if (m_previousIterator != current - 1) {
+            m_previousIterator = current - 1;
+            m_previousValue = *m_previousIterator;
+        }
+
         if (NA) {
             if (na< typename traits::ctype< return_type >::type >::is_na(*current)
-                || na< typename traits::ctype< return_type >::type >::is_na(*(current - 1))) {
+                || na< typename traits::ctype< return_type >::type >::is_na(m_previousValue)) {
                 return na< return_type >::VALUE();
             } else {
-                return *current - *(current - 1);
+                const return_type retval = *current - m_previousValue;
+                m_previousIterator = current;
+                m_previousValue = *current;
+                return retval;
             }
         } else {
-            return *current - *(current - 1);
+            const return_type retval = *current - m_previousValue;
+            m_previousIterator = current;
+            m_previousValue = *current;
+            return retval;
         }
     }
+
+private:
+    mutable Iterator m_previousIterator;
+    mutable return_type m_previousValue;
 };
 
 } // namespace functors
