@@ -5,15 +5,26 @@
 
 using namespace Rcpp;
 
+// test_hook
+void test_hook();
+RcppExport SEXP RcppHoney_test_hook() {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    test_hook();
+    return R_NilValue;
+END_RCPP
+}
 // test_binary_operators
-Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2);
-RcppExport SEXP RcppHoney_test_binary_operators(SEXP vSEXP, SEXP v2SEXP) {
+Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2, Rcpp::IntegerVector v3, Rcpp::NumericVector v4);
+RcppExport SEXP RcppHoney_test_binary_operators(SEXP vSEXP, SEXP v2SEXP, SEXP v3SEXP, SEXP v4SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< std::vector< int > >::type v(vSEXP);
     Rcpp::traits::input_parameter< std::vector< double > >::type v2(v2SEXP);
-    __result = Rcpp::wrap(test_binary_operators(v, v2));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type v3(v3SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type v4(v4SEXP);
+    __result = Rcpp::wrap(test_binary_operators(v, v2, v3, v4));
     return __result;
 END_RCPP
 }
@@ -51,12 +62,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_sugar_diff_function
-Rcpp::IntegerVector test_sugar_diff_function(IntegerVector v);
+Rcpp::IntegerVector test_sugar_diff_function(Rcpp::IntegerVector v);
 RcppExport SEXP RcppHoney_test_sugar_diff_function(SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< IntegerVector >::type v(vSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type v(vSEXP);
     __result = Rcpp::wrap(test_sugar_diff_function(v));
     return __result;
 END_RCPP

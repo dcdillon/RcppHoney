@@ -20,12 +20,12 @@
 namespace RcppHoney {
 namespace traits {
 
-template< bool VAL, typename T >
-struct enable_if {
+template< typename T >
+struct result_of {
 };
 
-template< typename T >
-struct enable_if< true, T > {
+template< typename T, typename U >
+struct result_of< T (*)(U) > {
     typedef T type;
 };
 

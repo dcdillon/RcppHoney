@@ -36,7 +36,7 @@ inline RcppHoney::binary_operator< T_ITER, U_ITER,                              
 operator _OP_ (const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs,                                                   \
     const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {                                                            \
                                                                                                                        \
-    return RcppHoney::make_binary_operator< (T::NA || U::NA) >()(                                       \
+    return RcppHoney::make_binary_operator< (T::NA || U::NA) >()(                                                      \
         lhs, rhs,                                                                                                      \
         RcppHoney::functors:: _FUNCTOR_ < T_ITER, U_ITER, (T::NA || U::NA) >());                                       \
 }                                                                                                                      \
@@ -66,7 +66,11 @@ operator _OP_ (const T &lhs, const RcppHoney::operand< U, U_ITER, U_RESULT > &rh
 }                                                                                                                      \
                                                                                                                        \
 template< typename T, typename U >                                                                                     \
-inline typename RcppHoney::traits::enable_if< RcppHoney::hook< T >::value,                                             \
+inline typename RcppHoney::traits::enable_if<                                                                          \
+    (RcppHoney::hook< T >::value && RcppHoney::hook< U >::value                                                        \
+        && (((RcppHoney::hook< T >::FAMILY == 1 || RcppHoney::hook< U >::FAMILY == 1)                                  \
+            || RcppHoney::hook< T >::FAMILY != RcppHoney::hook< U >::FAMILY)                                           \
+                || RcppHoney::hook< T >::NEED_BASIC_OPERATORS)),                                                       \
     RcppHoney::binary_operator<                                                                                        \
         typename RcppHoney::hook< T >::const_iterator,                                                                 \
         typename RcppHoney::hook< U >::const_iterator,                                                                 \

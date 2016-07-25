@@ -20,13 +20,19 @@
 namespace RcppHoney {
 namespace traits {
 
-template< bool VAL, typename T >
-struct enable_if {
+struct true_type {
+    static const bool value = true;
 };
 
-template< typename T >
-struct enable_if< true, T > {
-    typedef T type;
+struct false_type {
+    static const bool value = false;
+    char pad[64]; // makes sizeof(false_type) different than sizeof(true_type)
+};
+
+template< int VALUE >
+struct int_constant {
+    static const int value = VALUE;
+    const long size[VALUE]; // makes sizeof(int_constant::size) == VALUE
 };
 
 } // namespace traits

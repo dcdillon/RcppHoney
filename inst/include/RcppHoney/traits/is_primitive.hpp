@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include <Rcpp.h>
-
 namespace RcppHoney {
 namespace traits {
 
@@ -37,10 +35,10 @@ struct is_primitive< double > {
     static const bool value = true;
 };
 
-template<>
-struct is_primitive< Rcomplex > {
-    static const bool value = true;
-};
+//template<>
+//struct is_primitive< Rcomplex > {
+//    static const bool value = true;
+//};
 
 } // namespace traits
 } // namespace RcppHoney

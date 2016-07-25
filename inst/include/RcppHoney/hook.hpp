@@ -17,13 +17,42 @@
 
 #pragma once
 
-#include <Rcpp.h>
+#include "traits/integral_constant.hpp"
+#include "traits/result_of.hpp"
 
 namespace RcppHoney {
 
+namespace hooks {
+
 template< typename T >
-class hook {
-    static const bool value = false;
+T create_type();
+
+traits::false_type is_hooked(...);
+
+traits::true_type has_na(...);
+
+traits::true_type needs_basic_operators(...);
+
+traits::true_type needs_scalar_operators(...);
+
+traits::int_constant< 1 > family(...);
+
+template< typename T, typename U = typename T::const_iterator >
+struct const_iterator {
+    typedef typename T::const_iterator type;
 };
+
+} // namespace hooks
+
+template< typename T, typename U = typename T::const_iterator >
+struct hook {
+    static const bool value = (sizeof(::RcppHoney::hooks::is_hooked(hooks::create_type< T >())) == sizeof(traits::true_type));
+    static const bool NA = sizeof(hooks::has_na(hooks::create_type< T >())) == sizeof(traits::true_type);
+    static const bool NEED_BASIC_OPERATORS = sizeof(hooks::needs_basic_operators(hooks::create_type< T>())) == sizeof(traits::true_type);
+    static const bool NEED_SCALAR_OPERATORS = sizeof(hooks::needs_scalar_operators(hooks::create_type< T >())) == sizeof(traits::true_type);
+    static const int FAMILY = sizeof(hooks::family(hooks::create_type< T >())) / sizeof(long); // this is suspect but should work
+    typedef U const_iterator;
+};
+
 
 } // namespace RcppHoney

@@ -1,70 +1,53 @@
-#include <RcppHoney.hpp>
+#include <Rcpp.h>
+#include <RcppHoneyForward.hpp>
 #include <vector>
 
-
-using namespace Rcpp;
-
-// Create hooks for std::vector< int > and std::vector< double >
+// We have to declare our hooks before we include RcppHoney.hpp
 
 namespace RcppHoney {
+namespace hooks {
 
-template<>
-class hook< std::vector< int > > : public std::vector< int > {
-public:
-    static const bool value = true;
-    typedef std::vector< int >::const_iterator const_iterator;
-    typedef std::vector< int >::iterator iterator;
-    static const bool NA = true;
+// hooks for std::vector
+template< typename T, typename A>
+RcppHoney::traits::true_type is_hooked(const std::vector< T, A > &val);
 
-    template< typename T, typename T_ITER, typename T_RESULT >
-    hook< std::vector< int > >(const operand< T, T_ITER, T_RESULT > &rhs) : std::vector< int >(rhs.begin(), rhs.end()) {}
+// hooks for Rcpp::VectorBase
+template< int RTYPE, bool NA, typename T >
+RcppHoney::traits::true_type is_hooked(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
-    template< typename T, typename T_ITER, typename T_RESULT >
-    hook< std::vector< int > > &operator=(const operand< T, T_ITER, T_RESULT > &rhs) {
-        resize(rhs.end() - rhs.begin());
+template< int RTYPE, typename T >
+RcppHoney::traits::false_type has_na(const Rcpp::VectorBase< RTYPE, false, T > &val);
 
-        iterator i = begin();
-        T_ITER j = rhs.begin();
+template< int RTYPE, typename T >
+RcppHoney::traits::true_type has_na(const Rcpp::VectorBase< RTYPE, true, T > &val);
 
-        for ( ; i != end() && j != rhs.end(); ++i, ++j) {
-            *i = *j;
-        }
+template< int RTYPE, bool NA, typename T >
+RcppHoney::traits::true_type needs_basic_operators(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
-        return *this;
-    }
-};
+template< int RTYPE, bool NA, typename T >
+RcppHoney::traits::true_type needs_scalar_operators(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
-template<>
-class hook< std::vector< double > > : public std::vector< double > {
-public:
-    static const bool value = true;
-    typedef std::vector< double >::const_iterator const_iterator;
-    typedef std::vector< double >::iterator iterator;
-    static const bool NA = true;
+template< int RTYPE, bool NA, typename T >
+RcppHoney::traits::int_constant< 2 > family(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
-    template< typename T, typename T_ITER, typename T_RESULT >
-    hook< std::vector< double > >(const operand< T, T_ITER, T_RESULT > &rhs) : std::vector< double >(rhs.begin(), rhs.end()) {}
-
-    template< typename T, typename T_ITER, typename T_RESULT >
-    hook< std::vector< double > > &operator=(const operand< T, T_ITER, T_RESULT > &rhs) {
-        resize(rhs.end() - rhs.begin());
-
-        iterator i = begin();
-        T_ITER j = rhs.begin();
-
-        for ( ; i != end() && j != rhs.end(); ++i, ++j) {
-            *i = *j;
-        }
-
-        return *this;
-    }
-};
-
+} // namespace hooks
 } // namespace RcppHoney
 
+#include <RcppHoney.hpp>
+
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2) {
-    return Rcpp::wrap(v + v2 + 1 + v + v + 2);
+void test_hook() {
+    Rcpp::Rcout << RcppHoney::hook< Rcpp::NumericVector >::FAMILY << std::endl;
+    Rcpp::Rcout << sizeof(RcppHoney::hooks::is_hooked(RcppHoney::hooks::create_type< Rcpp::NumericVector >())) << std::endl;
+    if (RcppHoney::hook< Rcpp::NumericVector >::value) {
+        Rcpp::Rcout << "that works" << std::endl;
+    }
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2,
+                                          Rcpp::IntegerVector v3, Rcpp::NumericVector v4) {
+    return Rcpp::wrap(1 + v3 + v4 + v + v2 + 1 + v + 2);
 }
 
 // [[Rcpp::export]]
@@ -83,7 +66,7 @@ Rcpp::IntegerVector test_diff_function(std::vector< int > v) {
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector test_sugar_diff_function(IntegerVector v) {
+Rcpp::IntegerVector test_sugar_diff_function(Rcpp::IntegerVector v) {
     return Rcpp::diff(v);
 }
 
@@ -110,7 +93,7 @@ Rcpp::IntegerVector test_diff_function2() {
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector test_sugar_diff_function2() {
-    IntegerVector v(100000, 1);
+    Rcpp::IntegerVector v(100000, 1);
     return Rcpp::diff(v);
 }
 

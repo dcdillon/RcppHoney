@@ -17,19 +17,24 @@
 
 #pragma once
 
+#include "RcppHoney/traits/ctype.hpp"
+#include "RcppHoney/traits/enable_if.hpp"
+#include "RcppHoney/traits/if_else.hpp"
+#include "RcppHoney/traits/integral_constant.hpp"
+#include "RcppHoney/traits/is_primitive.hpp"
+#include "RcppHoney/traits/result_of.hpp"
+#include "RcppHoney/traits/widest_numeric_type.hpp"
+
 namespace RcppHoney {
-    
+
 template< typename T, typename T_ITER, typename T_RESULT >
 class operand;
 
-template< typename T >
-class hook;
-    
 } // namespace RcppHoney
 
 namespace Rcpp {
 namespace traits {
-    
+
 template< typename T, typename T_ITER, typename T_RESULT > SEXP wrap(
     const RcppHoney::operand< T, T_ITER, T_RESULT > &obj);
 
