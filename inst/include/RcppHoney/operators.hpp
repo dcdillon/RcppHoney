@@ -61,7 +61,7 @@ inline typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< T
     >                                                                                                                  \
 >::type                                                                                                                \
 operator _OP_ (const T &lhs, const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {                                   \
-    return RcppHoney::make_binary_operator< U::NA >()(RcppHoney::make_scalar_operator()(lhs),                          \
+    return RcppHoney::make_binary_operator< U::NA >()(RcppHoney::make_scalar_operator()(lhs), rhs,                     \
         RcppHoney::functors:: _FUNCTOR_ < typename RcppHoney::scalar_operator< T >::const_iterator, U_ITER, U::NA >());\
 }                                                                                                                      \
                                                                                                                        \

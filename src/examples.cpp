@@ -15,12 +15,14 @@ RcppHoney::traits::true_type is_hooked(const std::vector< T, A > &val);
 template< int RTYPE, bool NA, typename T >
 RcppHoney::traits::true_type is_hooked(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
+// return the appropriate NA value
 template< int RTYPE, typename T >
 RcppHoney::traits::false_type has_na(const Rcpp::VectorBase< RTYPE, false, T > &val);
 
 template< int RTYPE, typename T >
 RcppHoney::traits::true_type has_na(const Rcpp::VectorBase< RTYPE, true, T > &val);
 
+// assert that we need to create basic operators
 template< int RTYPE, bool NA, typename T >
 RcppHoney::traits::true_type needs_basic_operators(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
@@ -47,7 +49,7 @@ void test_hook() {
 // [[Rcpp::export]]
 Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2,
                                           Rcpp::IntegerVector v3, Rcpp::NumericVector v4) {
-    return Rcpp::wrap(1 + v3 + v4 + v + v2 + 1 + v + 2);
+    return Rcpp::wrap(1 + (v3 + v3) + (v3 + v4) + v + v2 + 1 + v + 2);
 }
 
 // [[Rcpp::export]]
