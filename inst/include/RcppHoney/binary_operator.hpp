@@ -31,26 +31,28 @@ private:
     LhsIterator m_lhsPos;
     RhsIterator m_rhsPos;
     typename Op::return_type m_value;
+    bool m_dirty;
     const Op *m_operator;
 
 public:
-    inline binary_operator_iterator() : m_operator(NULL) {}
+    inline binary_operator_iterator() : m_dirty(true), m_operator(NULL) {}
 
     inline binary_operator_iterator(const LhsIterator &lhsPos, const RhsIterator &rhsPos, const Op *op)
         : m_lhsPos(lhsPos), m_rhsPos(rhsPos), m_operator(op) {}
 
     inline typename Op::return_type operator*() {
-       return (*m_operator)(m_lhsPos, m_rhsPos);
-    }
+       if (m_dirty) {
+           m_value = (*m_operator)(m_lhsPos, m_rhsPos);
+           m_dirty = false;
+       }
 
-    inline typename Op::return_type *operator->() {
-        m_value = (*m_operator)(m_lhsPos, m_rhsPos);
-        return &m_value;
+       return m_value;
     }
 
     inline binary_operator_iterator &operator+=(const typename std::iterator<std::random_access_iterator_tag, typename Op::return_type>::difference_type n) {
         m_lhsPos += n;
         m_rhsPos += n;
+        m_dirty = true;
         return *this;
     }
 
@@ -63,6 +65,7 @@ public:
     inline binary_operator_iterator &operator-=(const typename std::iterator<std::random_access_iterator_tag, typename Op::return_type>::difference_type n) {
         m_lhsPos -= n;
         m_rhsPos -= n;
+        m_dirty = true;
         return *this;
     }
 
@@ -75,6 +78,7 @@ public:
     inline binary_operator_iterator &operator++() {
         ++m_lhsPos;
         ++m_rhsPos;
+        m_dirty = true;
         return *this;
     }
 
@@ -87,6 +91,7 @@ public:
     inline binary_operator_iterator &operator--() {
         --m_lhsPos;
         --m_rhsPos;
+        m_dirty = true;
         return *this;
     }
 

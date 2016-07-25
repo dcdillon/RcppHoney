@@ -29,24 +29,27 @@ template< typename InputIterator, typename Op, bool NA_VALUE >
 struct unary_operator_iterator : public std::iterator< std::random_access_iterator_tag, typename Op::return_type > {
 private:
     InputIterator m_pos;
+    typename Op::return_type m_value;
+    bool m_dirty;
     Op m_operator;
 
 public:
-    inline unary_operator_iterator() : m_operator(NULL) {}
+    inline unary_operator_iterator() : m_dirty(true), m_operator(NULL) {}
 
     inline unary_operator_iterator(const InputIterator &pos, const Op &op) : m_pos(pos), m_operator(op) {}
 
-    inline unary_operator_iterator &operator=(const unary_operator_iterator &rhs) {
-        m_pos = rhs.m_pos;
-        m_operator = rhs.m_operator;
-    }
-
     inline typename Op::return_type operator*() {
-       return m_operator(m_pos);
+       if (m_dirty) {
+           m_value = m_operator(m_pos);
+           m_dirty = false;
+       }
+
+       return m_value;
     }
 
     inline unary_operator_iterator &operator+=(const typename std::iterator<std::random_access_iterator_tag, typename Op::return_type>::difference_type n) {
         m_pos += n;
+        m_dirty = true;
         return *this;
     }
 
@@ -58,6 +61,7 @@ public:
 
     inline unary_operator_iterator &operator-=(const typename std::iterator<std::random_access_iterator_tag, typename Op::return_type>::difference_type n) {
         m_pos -= n;
+        m_dirty = true;
         return *this;
     }
 
@@ -69,6 +73,7 @@ public:
 
     inline unary_operator_iterator &operator++() {
         ++m_pos;
+        m_dirty = true;
         return *this;
     }
 
@@ -80,7 +85,8 @@ public:
 
     inline unary_operator_iterator &operator--() {
         --m_pos;
-         return *this;
+        m_dirty = true;
+        return *this;
     }
 
     inline unary_operator_iterator operator--(int) {

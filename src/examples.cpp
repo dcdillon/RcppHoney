@@ -49,7 +49,8 @@ void test_hook() {
 // [[Rcpp::export]]
 Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2,
                                           Rcpp::IntegerVector v3, Rcpp::NumericVector v4) {
-    return Rcpp::wrap(1 + (v3 + v3) + (v3 + v4) + v + v2 + 1 + v + 2);
+    return Rcpp::wrap(1 + (RcppHoney::log(v3) + v3) + RcppHoney::abs((RcppHoney::exp(v3) + v4))
+                          + RcppHoney::log(v) + v2 + 1 + RcppHoney::sqrt(v) + 2);
 }
 
 // [[Rcpp::export]]
