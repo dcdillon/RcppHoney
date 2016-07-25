@@ -26,7 +26,7 @@
 namespace RcppHoney {
 
 template< typename T >
-struct scalar_operator_iterator : public std::iterator< std::random_access_iterator_tag, T > {
+struct scalar_operator_iterator : public std::iterator< std::bidirectional_iterator_tag, T > {
 private:
     T m_value;
 
@@ -37,26 +37,6 @@ public:
 
     inline T operator*() {
        return m_value;
-    }
-
-    inline T *operator->() {
-        return &m_value;
-    }
-
-    inline scalar_operator_iterator &operator+=(const typename std::iterator<std::random_access_iterator_tag, T>::difference_type n) {
-        return *this;
-    }
-
-    inline scalar_operator_iterator operator+(const typename std::iterator<std::random_access_iterator_tag, T>::difference_type n) const {
-        return *this;
-    }
-
-    inline scalar_operator_iterator &operator-=(const typename std::iterator<std::random_access_iterator_tag, T>::difference_type n) {
-        return *this;
-    }
-
-    inline scalar_operator_iterator operator-(const typename std::iterator<std::random_access_iterator_tag, T>::difference_type n) const {
-        return *this;
     }
 
     inline scalar_operator_iterator &operator++() {
@@ -82,10 +62,6 @@ public:
     inline bool operator!=(const scalar_operator_iterator &rhs) const {
         return !operator==(rhs);
     }
-
-    friend inline ptrdiff_t operator-(const scalar_operator_iterator &lhs, const scalar_operator_iterator &rhs) {
-        return 1;
-    }
 };
 
 template< typename T >
@@ -110,6 +86,7 @@ public:
         m_value(val) {}
 
     uint64_t length() const {return 1;}
+    uint64_t size() const {return 1;}
     const_iterator begin() const {return const_iterator(m_value);}
     const_iterator end() const {return const_iterator(m_value);}
 };

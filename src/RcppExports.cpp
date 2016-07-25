@@ -5,15 +5,6 @@
 
 using namespace Rcpp;
 
-// test_hook
-void test_hook();
-RcppExport SEXP RcppHoney_test_hook() {
-BEGIN_RCPP
-    Rcpp::RNGScope __rngScope;
-    test_hook();
-    return R_NilValue;
-END_RCPP
-}
 // test_binary_operators
 Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2, Rcpp::IntegerVector v3, Rcpp::NumericVector v4);
 RcppExport SEXP RcppHoney_test_binary_operators(SEXP vSEXP, SEXP v2SEXP, SEXP v3SEXP, SEXP v4SEXP) {

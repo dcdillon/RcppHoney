@@ -694,8 +694,11 @@ struct diff {
     typedef typename std::iterator_traits< Iterator >::value_type return_type;
 
     return_type operator()(Iterator &current) const {
-        if (m_previousIterator != current - 1) {
-            m_previousIterator = current - 1;
+        Iterator prev = current;
+        --prev;
+
+        if (m_previousIterator != prev) {
+            m_previousIterator = prev;
             m_previousValue = *m_previousIterator;
         }
 

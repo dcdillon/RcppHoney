@@ -26,9 +26,11 @@ RcppHoney::traits::true_type has_na(const Rcpp::VectorBase< RTYPE, true, T > &va
 template< int RTYPE, bool NA, typename T >
 RcppHoney::traits::true_type needs_basic_operators(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
+// assert that we need to create type + scalar operators
 template< int RTYPE, bool NA, typename T >
 RcppHoney::traits::true_type needs_scalar_operators(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
+// call this family 2
 template< int RTYPE, bool NA, typename T >
 RcppHoney::traits::int_constant< 2 > family(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
@@ -38,19 +40,10 @@ RcppHoney::traits::int_constant< 2 > family(const Rcpp::VectorBase< RTYPE, NA, T
 #include <RcppHoney.hpp>
 
 // [[Rcpp::export]]
-void test_hook() {
-    Rcpp::Rcout << RcppHoney::hook< Rcpp::NumericVector >::FAMILY << std::endl;
-    Rcpp::Rcout << sizeof(RcppHoney::hooks::is_hooked(RcppHoney::hooks::create_type< Rcpp::NumericVector >())) << std::endl;
-    if (RcppHoney::hook< Rcpp::NumericVector >::value) {
-        Rcpp::Rcout << "that works" << std::endl;
-    }
-}
-
-// [[Rcpp::export]]
 Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2,
                                           Rcpp::IntegerVector v3, Rcpp::NumericVector v4) {
-    return Rcpp::wrap(1 + (RcppHoney::log(v3) + v3) + RcppHoney::abs((RcppHoney::exp(v3) + v4))
-                          + RcppHoney::log(v) + v2 + 1 + RcppHoney::sqrt(v) + 2);
+    return Rcpp::wrap(RcppHoney::diff(1 + (RcppHoney::log(v3) + v3) + RcppHoney::abs((RcppHoney::exp(v3) + v4))
+                          + RcppHoney::log(v) + v2 + 1 + RcppHoney::sqrt(v) + 2));
 }
 
 // [[Rcpp::export]]

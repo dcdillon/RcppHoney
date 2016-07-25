@@ -36,6 +36,10 @@ public:
         return static_cast< const T * >(this)->length();
     }
 
+    uint64_t size() const {
+        return static_cast< const T * >(this)->size();
+    }
+
     const_iterator begin() const {
         return static_cast< const T * >(this)->begin();
     }

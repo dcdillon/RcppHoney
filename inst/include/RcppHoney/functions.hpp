@@ -81,28 +81,33 @@ RCPP_HONEY_GENERATE_UNARY_FUNCTION(trunc)
 
 
 // diff
-template< typename T, typename T_ITER, typename T_RESULT >                              
-unary_operator< T_ITER, functors::diff< T_ITER, T::NA >, T::NA >                   
-diff(const operand< T, T_ITER, T_RESULT > &rhs) {                                   
+template< typename T, typename T_ITER, typename T_RESULT >
+unary_operator< T_ITER, functors::diff< T_ITER, T::NA >, T::NA >
+diff(const operand< T, T_ITER, T_RESULT > &rhs) {
+    T_ITER begin = rhs.begin();
+    ++begin;
     return unary_operator< T_ITER, functors::diff< T_ITER, T::NA >, T::NA >(
-        rhs.begin() + 1, rhs.end(), functors::diff< T_ITER, T::NA >());
-}                                                                                       
-                                                                                        
-template< typename T >                                                                  
-typename traits::enable_if<                                                             
-    hook< T >::value,                                                                   
-    unary_operator<                                                                     
-        typename hook< T >::const_iterator,                                             
-        functors::diff< typename hook< T >::const_iterator, hook< T >::NA >,       
-        hook< T >::NA                                                                   
-    >                                                                                   
->::type                                                                                 
-diff(const T &rhs) {                                                                
-    return unary_operator<                                                                     
-        typename hook< T >::const_iterator,                                             
-        functors::diff< typename hook< T >::const_iterator, hook< T >::NA >,       
-        hook< T >::NA                                                                   
-    >(rhs.begin() + 1, rhs.end(),
+        begin, rhs.end(), hooks::extract_size(rhs) - 1, functors::diff< T_ITER, T::NA >());
+}
+
+template< typename T >
+typename traits::enable_if<
+    hook< T >::value,
+    unary_operator<
+        typename hook< T >::const_iterator,
+        functors::diff< typename hook< T >::const_iterator, hook< T >::NA >,
+        hook< T >::NA
+    >
+>::type
+diff(const T &rhs) {
+    typename hook< T >::const_iterator begin = rhs.begin();
+    ++begin;
+
+    return unary_operator<
+        typename hook< T >::const_iterator,
+        functors::diff< typename hook< T >::const_iterator, hook< T >::NA >,
+        hook< T >::NA
+    >(begin, rhs.end(), hooks::extract_size(rhs) - 1,
         functors::diff< typename hook< T >::const_iterator, hook< T >::NA >());
 }
 

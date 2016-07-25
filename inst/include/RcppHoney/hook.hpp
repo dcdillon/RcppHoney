@@ -42,6 +42,11 @@ struct const_iterator {
     typedef typename T::const_iterator type;
 };
 
+template< typename T >
+uint64_t extract_size(const T &obj) {
+    return obj.size();
+}
+
 } // namespace hooks
 
 template< typename T, typename U = typename T::const_iterator >

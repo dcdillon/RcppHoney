@@ -22,11 +22,12 @@
 #include <algorithm>
 #include <cstddef>
 #include "operand.hpp"
+#include "hook.hpp"
 
 namespace RcppHoney {
 
 template< typename InputIterator, typename Op, bool NA_VALUE >
-struct unary_operator_iterator : public std::iterator< std::random_access_iterator_tag, typename Op::return_type > {
+struct unary_operator_iterator : public std::iterator< std::bidirectional_iterator_tag, typename Op::return_type > {
 private:
     InputIterator m_pos;
     typename Op::return_type m_value;
@@ -34,9 +35,9 @@ private:
     Op m_operator;
 
 public:
-    inline unary_operator_iterator() : m_dirty(true), m_operator(NULL) {}
+    inline unary_operator_iterator() : m_dirty(true) {}
 
-    inline unary_operator_iterator(const InputIterator &pos, const Op &op) : m_pos(pos), m_operator(op) {}
+    inline unary_operator_iterator(const InputIterator &pos, const Op &op) : m_pos(pos), m_dirty(true), m_operator(op) {}
 
     inline typename Op::return_type operator*() {
        if (m_dirty) {
@@ -45,30 +46,6 @@ public:
        }
 
        return m_value;
-    }
-
-    inline unary_operator_iterator &operator+=(const typename std::iterator<std::random_access_iterator_tag, typename Op::return_type>::difference_type n) {
-        m_pos += n;
-        m_dirty = true;
-        return *this;
-    }
-
-    inline unary_operator_iterator operator+(const typename std::iterator<std::random_access_iterator_tag, typename Op::return_type>::difference_type n) const {
-        unary_operator_iterator i = *this;
-        i += n;
-        return i;
-    }
-
-    inline unary_operator_iterator &operator-=(const typename std::iterator<std::random_access_iterator_tag, typename Op::return_type>::difference_type n) {
-        m_pos -= n;
-        m_dirty = true;
-        return *this;
-    }
-
-    inline unary_operator_iterator operator-(const typename std::iterator<std::random_access_iterator_tag, typename Op::return_type>::difference_type n) const {
-        unary_operator_iterator i = *this;
-        i -= n;
-        return i;
     }
 
     inline unary_operator_iterator &operator++() {
@@ -102,14 +79,6 @@ public:
     inline bool operator!=(const unary_operator_iterator &rhs) const {
         return !operator==(rhs);
     }
-
-    inline typename Op::return_type operator[](ptrdiff_t n) const {
-        return *(*this + n);
-    }
-
-    friend inline ptrdiff_t operator-(const unary_operator_iterator &lhs, const unary_operator_iterator &rhs) {
-        return lhs.m_pos - rhs.m_pos;
-    }
 };
 
 template< typename InputIterator, typename Op, bool NA_VALUE >
@@ -134,10 +103,11 @@ private:
     Op m_operator;
 
 public:
-    unary_operator(const InputIterator &begin, const InputIterator &end, const Op &op) :
-        m_begin(begin), m_end(end), m_length(end - begin), m_operator(op) {}
+    unary_operator(const InputIterator &begin, const InputIterator &end, uint64_t size, const Op &op) :
+        m_begin(begin), m_end(end), m_length(size), m_operator(op) {}
 
     uint64_t length() const {return m_length;}
+    uint64_t size() const {return m_length;}
     const_iterator begin() const {return const_iterator(m_begin, m_operator);}
     const_iterator end() const {return const_iterator(m_end, m_operator);}
 };
@@ -146,7 +116,7 @@ template< bool NA >
 struct make_unary_operator {
     template< typename T, typename Op >
     unary_operator< typename T::const_iterator, Op, NA > operator()(const T &obj, const Op &op) {
-        return unary_operator< typename T::const_iterator, Op, NA >(obj.begin(), obj.end(), op);
+        return unary_operator< typename T::const_iterator, Op, NA >(obj.begin(), obj.end(), hooks::extract_size(obj), op);
     }
 };
 
