@@ -23,7 +23,7 @@ install:
  - ./travis-tool.sh install_github dcdillon/RcppHoney
 
 script:
-
+ - true
 after_script:
  - ./travis-tool.sh dump_logs
 
