@@ -67,7 +67,7 @@ Rcpp::NumericVector example_manually_hooked() {
     //     result <- 1 + v + log(v) - v - 1 + sqrt(v) + -v
     
     // We can store our result in any of RcppHoney::LogicalVector, RcppHoney::IntegerVector, or
-    // RcppHoney::NumericVector and simply return it to R.  These classes simply inherit from their
+    // RcppHoney::NumericVector and simply return it to R.  These classes inherit from their
     // Rcpp counterparts and add a new constructor.  The only copy of the data, in this case, is when
     // we assign our expression to retval.  Since it is then a "native" R type, returning it is a
     // shallow copy.
