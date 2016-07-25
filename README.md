@@ -70,7 +70,7 @@ Rcpp::NumericVector example_manually_hooked() {
     // RcppHoney::NumericVector and simply return it to R.  These classes inherit from their
     // Rcpp counterparts and add a new constructor.  The only copy of the data, in this case, is when
     // we assign our expression to retval.  Since it is then a "native" R type, returning it is a
-    // shallow copy.  Alternatively we could simply write this as:
+    // shallow copy.  Alternatively we could write this as:
     //     return Rcpp::wrap(1 + v + RcppHoney::log(v) - v - 1 + RcppHoney::sqrt(v) + -v2);
     
     RcppHoney::NumericVector retval
