@@ -23,3 +23,4 @@
 #include "RcppHoney/wrap.hpp"
 #include "RcppHoney/operators.hpp"
 #include "RcppHoney/functions.hpp"
+#include "RcppHoney/storage.hpp"

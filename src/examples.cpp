@@ -51,12 +51,12 @@ Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< dou
     l.push_back(4);
     l.push_back(5);
 
-    return Rcpp::wrap(
-        (1 + v)
-        + (v + 1)
-        + (v + v2)
-        + (v2 + v)
-        + (v + v3)
+    /*return Rcpp::wrap(
+        (1 + v)     // scalar + std::vector< int >
+        + (v + 1)   // std::vector< int > + scalar
+        + (v + v2)  // std::vector< int > + std::vector< double >
+        + (v2 + v)  // std::vector< double > + std::vector< int >
+        + (v + v3)  // std::vector< int > + IntegerVector
         + (v3 + v)
         + (v + v4)
         + (v4 + v)
@@ -64,9 +64,12 @@ Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< dou
         + (s + v)
         + (v + l)
         + (l + v)
-    );
-    //return Rcpp::wrap(RcppHoney::diff(1 + l + 1 + s + (RcppHoney::log(v3) + v3) + RcppHoney::abs((RcppHoney::exp(v3) + v4))
-    //                      + RcppHoney::log(v) + v2 + 1 + RcppHoney::sqrt(v) + 2));
+    );*/
+
+    RcppHoney::NumericVector retval = RcppHoney::diff(1 + l + 1 + s + (RcppHoney::log(v3) + v3)
+        + RcppHoney::abs((RcppHoney::exp(v3) + v4)) + RcppHoney::log(v) + v2 + 1 + RcppHoney::sqrt(v) + 2);
+
+    return retval;
 }
 
 // [[Rcpp::export]]
