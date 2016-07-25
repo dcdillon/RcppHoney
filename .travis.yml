@@ -17,8 +17,8 @@ before_install:
 install:
  - ./travis-tool.sh install_aptget r-cran-rcpp
 
-script: 
- - ./travis-tool.sh run_tests
+#script: 
+# - ./travis-tool.sh run_tests
 
 after_script:
  - ./travis-tool.sh dump_logs
