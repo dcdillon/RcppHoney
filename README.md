@@ -1,4 +1,4 @@
-# RcppHoney
+# RcppHoney ![Build Status](https://travis-ci.org/dcdillon/cpuaff.svg?branch=master)
 
 ### Description
 
