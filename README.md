@@ -51,11 +51,11 @@ RcppHoney::traits::int_constant< FAMILY_USER + 1 > family(const std::list< T, A 
 Rcpp::NumericVector example_manually_hooked() {
 
     // We manually hooked std::list in to RcppHoney so we'll create one
-    std::list< int > l {1, 2, 3, 4, 5}; // assuming c++11 for brevity, but not required
+    std::list< int > l {1, 2, 3, 4, 5}; // c++11 for brevity here, but not required for RcppHoney
 
     // std::vector is already hooked in to RcppHoney in default_hooks.hpp so we'll
     // create one of those too
-    std::vector< int > v {1, 2, 3, 4, 5}; // assuming c++11 for brevity, but not required
+    std::vector< int > v {1, 2, 3, 4, 5}; // c++11 for brevity here, but not required for RcppHoney
 
     // And for good measure, let's create an Rcpp::NumericVector which is also hooked by default
     Rcpp::NumericVector v2(v.begin(), v.end());
