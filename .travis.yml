@@ -8,6 +8,11 @@ language: c
 
 sudo: required
 
+env:
+  global:
+    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
+    - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
+    
 before_install:
  ## r-travis by Craig Citro et al
  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
