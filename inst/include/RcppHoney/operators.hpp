@@ -139,6 +139,60 @@ operator _OP_ (const T &lhs, const RcppHoney::operand< U, U_ITER, U_RESULT > &rh
             U_ITER,                                                                                                    \
             (U::NA || RcppHoney::hook< T >::NA)                                                                        \
         >());                                                                                                          \
+}                                                                                                                      \
+                                                                                                                       \
+template< typename T, typename U >                                                                                     \
+inline typename RcppHoney::traits::enable_if<                                                                          \
+    RcppHoney::traits::is_primitive< T >::value                                                                        \
+    && RcppHoney::hook< U >::value                                                                                     \
+    && RcppHoney::hook< U >::NEED_SCALAR_OPERATORS,                                                                    \
+    RcppHoney::binary_operator<                                                                                        \
+        typename RcppHoney::scalar_operator< T >::const_iterator,                                                      \
+        typename RcppHoney::hook< U >::const_iterator,                                                                 \
+        RcppHoney::functors:: _FUNCTOR_ <                                                                              \
+            typename RcppHoney::scalar_operator< T >::const_iterator,                                                  \
+            typename RcppHoney::hook< U >::const_iterator,                                                             \
+            RcppHoney::hook< U >::NA                                                                                   \
+        >,                                                                                                             \
+        RcppHoney::hook< U >::NA                                                                                       \
+    >                                                                                                                  \
+>::type                                                                                                                \
+operator _OP_ (const T &lhs, const U &rhs) {                                                                           \
+    return RcppHoney::make_binary_operator< RcppHoney::hook< U >::NA >()(                                              \
+        RcppHoney::make_scalar_operator()(lhs),                                                                        \
+        rhs,                                                                                                           \
+        RcppHoney::functors:: _FUNCTOR_ <                                                                              \
+            typename RcppHoney::scalar_operator< T >::const_iterator,                                                  \
+            typename RcppHoney::hook< U >::const_iterator,                                                             \
+            RcppHoney::hook< U >::NA                                                                                   \
+        >());                                                                                                          \
+}                                                                                                                      \
+                                                                                                                       \
+template< typename T, typename U >                                                                                     \
+inline typename RcppHoney::traits::enable_if<                                                                          \
+    RcppHoney::traits::is_primitive< U >::value                                                                        \
+    && RcppHoney::hook< T >::value                                                                                     \
+    && RcppHoney::hook< T >::NEED_SCALAR_OPERATORS,                                                                    \
+    RcppHoney::binary_operator<                                                                                        \
+        typename RcppHoney::hook< T >::const_iterator,                                                                 \
+        typename RcppHoney::scalar_operator< U >::const_iterator,                                                      \
+        RcppHoney::functors:: _FUNCTOR_ <                                                                              \
+            typename RcppHoney::hook< T >::const_iterator,                                                             \
+            typename RcppHoney::scalar_operator< U >::const_iterator,                                                  \
+            RcppHoney::hook< T >::NA                                                                                   \
+        >,                                                                                                             \
+        RcppHoney::hook< T >::NA                                                                                       \
+    >                                                                                                                  \
+>::type                                                                                                                \
+operator _OP_ (const T &lhs, const U &rhs) {                                                                           \
+    return RcppHoney::make_binary_operator< RcppHoney::hook< T >::NA >()(                                              \
+        lhs,                                                                                                           \
+        RcppHoney::make_scalar_operator()(rhs),                                                                        \
+        RcppHoney::functors:: _FUNCTOR_ <                                                                              \
+            typename RcppHoney::hook< T >::const_iterator,                                                             \
+            typename RcppHoney::scalar_operator< U >::const_iterator,                                                  \
+            RcppHoney::hook< T >::NA                                                                                   \
+        >());                                                                                                          \
 }
 
 

@@ -19,6 +19,7 @@
 
 #include "traits/integral_constant.hpp"
 #include "traits/result_of.hpp"
+#include "default_hooks.hpp"
 
 namespace RcppHoney {
 
@@ -37,15 +38,8 @@ traits::true_type needs_scalar_operators(...);
 
 traits::int_constant< 1 > family(...);
 
-template< typename T, typename U = typename T::const_iterator >
-struct const_iterator {
-    typedef typename T::const_iterator type;
-};
-
 template< typename T >
-uint64_t extract_size(const T &obj) {
-    return obj.size();
-}
+uint64_t extract_size(const T &obj) {return obj.size();}
 
 } // namespace hooks
 

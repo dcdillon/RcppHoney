@@ -7,32 +7,25 @@
 namespace RcppHoney {
 namespace hooks {
 
-// hooks for std::vector
-template< typename T, typename A>
-RcppHoney::traits::true_type is_hooked(const std::vector< T, A > &val);
+// define any user hooks here as follows
+template< typename T, typename A >
+traits::true_type is_hooked(const std::list< T, A > &val);
 
-// hooks for Rcpp::VectorBase
-template< int RTYPE, bool NA, typename T >
-RcppHoney::traits::true_type is_hooked(const Rcpp::VectorBase< RTYPE, NA, T > &val);
-
-// return the appropriate NA value
-template< int RTYPE, typename T >
-RcppHoney::traits::false_type has_na(const Rcpp::VectorBase< RTYPE, false, T > &val);
-
-template< int RTYPE, typename T >
-RcppHoney::traits::true_type has_na(const Rcpp::VectorBase< RTYPE, true, T > &val);
+// set NA to true
+template< typename T, typename A >
+traits::true_type has_na(const std::list< T, A > &val);
 
 // assert that we need to create basic operators
-template< int RTYPE, bool NA, typename T >
-RcppHoney::traits::true_type needs_basic_operators(const Rcpp::VectorBase< RTYPE, NA, T > &val);
+template< typename T, typename A >
+RcppHoney::traits::true_type needs_basic_operators(const std::list< T, A > &val);
 
 // assert that we need to create type + scalar operators
-template< int RTYPE, bool NA, typename T >
-RcppHoney::traits::true_type needs_scalar_operators(const Rcpp::VectorBase< RTYPE, NA, T > &val);
+template< typename T, typename A >
+RcppHoney::traits::true_type needs_scalar_operators(const std::list< T, A > &val);
 
-// call this family 2
-template< int RTYPE, bool NA, typename T >
-RcppHoney::traits::int_constant< 2 > family(const Rcpp::VectorBase< RTYPE, NA, T > &val);
+// give this a family identifier
+template< typename T, typename A >
+RcppHoney::traits::int_constant< FAMILY_USER + 1 > family(const std::list< T, A > &val);
 
 } // namespace hooks
 } // namespace RcppHoney
@@ -42,8 +35,38 @@ RcppHoney::traits::int_constant< 2 > family(const Rcpp::VectorBase< RTYPE, NA, T
 // [[Rcpp::export]]
 Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2,
                                           Rcpp::IntegerVector v3, Rcpp::NumericVector v4) {
-    return Rcpp::wrap(RcppHoney::diff(1 + (RcppHoney::log(v3) + v3) + RcppHoney::abs((RcppHoney::exp(v3) + v4))
-                          + RcppHoney::log(v) + v2 + 1 + RcppHoney::sqrt(v) + 2));
+
+    // we're assuming that all input parameters are vectors of length 5
+    std::set< int > s;
+    s.insert(1);
+    s.insert(2);
+    s.insert(3);
+    s.insert(4);
+    s.insert(5);
+
+    std::list< int > l;
+    l.push_back(1);
+    l.push_back(2);
+    l.push_back(3);
+    l.push_back(4);
+    l.push_back(5);
+
+    return Rcpp::wrap(
+        (1 + v)
+        + (v + 1)
+        + (v + v2)
+        + (v2 + v)
+        + (v + v3)
+        + (v3 + v)
+        + (v + v4)
+        + (v4 + v)
+        + (v + s)
+        + (s + v)
+        + (v + l)
+        + (l + v)
+    );
+    //return Rcpp::wrap(RcppHoney::diff(1 + l + 1 + s + (RcppHoney::log(v3) + v3) + RcppHoney::abs((RcppHoney::exp(v3) + v4))
+    //                      + RcppHoney::log(v) + v2 + 1 + RcppHoney::sqrt(v) + 2));
 }
 
 // [[Rcpp::export]]

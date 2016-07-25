@@ -30,6 +30,18 @@ namespace RcppHoney {
 template< typename T, typename T_ITER, typename T_RESULT >
 class operand;
 
+namespace hooks {
+
+static const int FAMILY_USER = 1024;
+
+template< typename T, typename U = typename T::const_iterator >
+struct const_iterator {
+    typedef typename T::const_iterator type;
+};
+
+    
+} // namespace hooks
+
 } // namespace RcppHoney
 
 namespace Rcpp {
