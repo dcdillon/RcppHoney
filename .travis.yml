@@ -1,34 +1,29 @@
 # Sample .travis.yml for R projects.
 #
-# See README.md for instructions, or for more configuration options,
-# see the wiki:
-#   https://github.com/craigcitro/r-travis/wiki
+# See the r-travis repo and its wiki 
+#     https://github.com/craigcitro/r-travis/wiki
+#     https://github.com/eddelbuettel/r-travis/
 
 language: c
 
 sudo: required
 
-env:
-  global:
-    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
-    - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
-    - CRAN="http://cran.us.r-project.org"
-
 before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - chmod 755 ./travis-tool.sh
-  - ./travis-tool.sh bootstrap
-  - sudo add-apt-repository -y ppa:edd/misc
-  - sudo apt-get update -q
+ ## r-travis by Craig Citro et al
+ - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+ - chmod 755 ./travis-tool.sh
+ - ./travis-tool.sh bootstrap
 
 install:
-  ## note that we currently depend on highlight 0.4.4.1 from the PPA as 0.4.5 has issues
-  - ./travis-tool.sh install_aptget r-cran-runit r-cran-inline r-cran-rbenchmark r-cran-highlight r-cran-pkgkitten
+ - ./travis-tool.sh install_aptget r-cran-rcpp
 
-after_failure:
-  - ./travis-tool.sh dump_logs
+script: 
+ - ./travis-tool.sh run_tests
+
+after_script:
+ - ./travis-tool.sh dump_logs
 
 notifications:
-  email:
-    on_success: change
-    on_failure: change
+ email:
+   on_success: change
+   on_failure: change
