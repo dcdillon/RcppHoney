@@ -23,7 +23,7 @@ RcppHoney::traits::true_type needs_basic_operators(const std::list< T, A > &val)
 template< typename T, typename A >
 RcppHoney::traits::true_type needs_scalar_operators(const std::list< T, A > &val);
 
-// give this a family identifier
+// give this a family identifier (has to be unique and has to be > FAMILY_USER)
 template< typename T, typename A >
 RcppHoney::traits::int_constant< FAMILY_USER + 1 > family(const std::list< T, A > &val);
 
@@ -33,17 +33,9 @@ RcppHoney::traits::int_constant< FAMILY_USER + 1 > family(const std::list< T, A 
 #include <RcppHoney.hpp>
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< double > v2,
-                                          Rcpp::IntegerVector v3, Rcpp::NumericVector v4) {
+Rcpp::NumericVector example_manually_hooked() {
 
-    // we're assuming that all input parameters are vectors of length 5
-    std::set< int > s;
-    s.insert(1);
-    s.insert(2);
-    s.insert(3);
-    s.insert(4);
-    s.insert(5);
-
+    // we manually hooked std::list in to RcppHoney so we'll create one
     std::list< int > l;
     l.push_back(1);
     l.push_back(2);
@@ -51,86 +43,21 @@ Rcpp::NumericVector test_binary_operators(std::vector< int > v, std::vector< dou
     l.push_back(4);
     l.push_back(5);
 
-    /*return Rcpp::wrap(
-        (1 + v)     // scalar + std::vector< int >
-        + (v + 1)   // std::vector< int > + scalar
-        + (v + v2)  // std::vector< int > + std::vector< double >
-        + (v2 + v)  // std::vector< double > + std::vector< int >
-        + (v + v3)  // std::vector< int > + IntegerVector
-        + (v3 + v)
-        + (v + v4)
-        + (v4 + v)
-        + (v + s)
-        + (s + v)
-        + (v + l)
-        + (l + v)
-    );*/
+    // std::vector is already hooked in to RcppHoney in default_hooks.hpp so we'll
+    // create one of those two
+    std::vector< int > v;
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
+    v.push_back(4);
+    v.push_back(5);
 
-    RcppHoney::NumericVector retval = RcppHoney::diff(1 + l + 1 + s + (RcppHoney::log(v3) + v3)
-        + RcppHoney::abs((RcppHoney::exp(v3) + v4)) + RcppHoney::log(v) + v2 + 1 + RcppHoney::sqrt(v) + 2);
+    // and for good measure, let's create an Rcpp::NumericVector which is also hooked by default
+    Rcpp::NumericVector v2(v.begin(), v.end());
 
+    // now do some weird operations incorporating both std::vector and std::list and some
+    // RcppHoney functions and return it.
+    RcppHoney::NumericVector retval
+        =  l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2;
     return retval;
-}
-
-// [[Rcpp::export]]
-Rcpp::NumericVector test_unary_operators(std::vector< int > v) {
-    return Rcpp::wrap(-v + v);
-}
-
-// [[Rcpp::export]]
-Rcpp::NumericVector test_unary_functions(std::vector< int > v) {
-    return Rcpp::wrap(RcppHoney::sqrt(RcppHoney::log(v) + RcppHoney::exp(v)));
-}
-
-// [[Rcpp::export]]
-Rcpp::IntegerVector test_diff_function(std::vector< int > v) {
-    return Rcpp::wrap(RcppHoney::diff(v));
-}
-
-// [[Rcpp::export]]
-Rcpp::IntegerVector test_sugar_diff_function(Rcpp::IntegerVector v) {
-    return Rcpp::diff(v);
-}
-
-// [[Rcpp::export]]
-Rcpp::IntegerVector test_naive_diff_function(std::vector< int > v) {
-    std::vector< int > x;
-    x.reserve(v.size());
-
-    std::vector< int >::iterator i = v.begin() + 1;
-
-    for ( ; i != v.end(); ++i)
-    {
-        x.push_back(*i - (*(i - 1)));
-    }
-
-    return Rcpp::wrap(x);
-}
-
-// [[Rcpp::export]]
-Rcpp::IntegerVector test_diff_function2() {
-    std::vector< int > v(100000, 1);
-    return Rcpp::wrap(RcppHoney::diff(v));
-}
-
-// [[Rcpp::export]]
-Rcpp::IntegerVector test_sugar_diff_function2() {
-    Rcpp::IntegerVector v(100000, 1);
-    return Rcpp::diff(v);
-}
-
-// [[Rcpp::export]]
-Rcpp::IntegerVector test_naive_diff_function2() {
-    std::vector< int > v(100000, 1);
-    std::vector< int > x;
-    x.reserve(v.size());
-
-    std::vector< int >::iterator i = v.begin() + 1;
-
-    for ( ; i != v.end(); ++i)
-    {
-        x.push_back(*i - (*(i - 1)));
-    }
-
-    return Rcpp::wrap(x);
 }
