@@ -1,7 +1,7 @@
 Package: RcppHoney
 Type: Package
 Title: Iterator Based Expression Template Expansion of Standard Operators
-Version: 0.1.0
+Version: 0.1.1
 Author: Daniel C. Dillon
 Maintainer: Daniel C. Dillon <dcdillon@gmail.com>
 Description: Creates an easy way to use expression templates with R
