@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <RcppCommon.h>
 #include "RcppHoney/traits/ctype.hpp"
 #include "RcppHoney/traits/enable_if.hpp"
 #include "RcppHoney/traits/if_else.hpp"
@@ -39,7 +40,7 @@ struct const_iterator {
     typedef typename T::const_iterator type;
 };
 
-    
+
 } // namespace hooks
 
 } // namespace RcppHoney

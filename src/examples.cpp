@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include <RcppHoneyForward.hpp>
 #include <vector>
 
@@ -58,6 +57,6 @@ Rcpp::NumericVector example_manually_hooked() {
     // now do some weird operations incorporating both std::vector and std::list and some
     // RcppHoney functions and return it.
     RcppHoney::NumericVector retval
-        =  l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2;
+        =  42 + l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2 + 42;
     return retval;
 }

@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <RcppCommon.h>
 #include "RcppHoneyForward.hpp"
 #include <Rcpp.h>
 #include "RcppHoney/wrap.hpp"
