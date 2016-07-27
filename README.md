@@ -1,4 +1,4 @@
-# RcppHoney ![Build Status](https://travis-ci.org/dcdillon/cpuaff.svg?branch=master)
+# RcppHoney [![Build Status](https://travis-ci.org/dcdillon/RcppHoney.svg)](https://travis-ci.org/RcppCore/Rcpp) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/RcppHoney)](http://cran.r-project.org/package=Rcpp) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppHoney?color=brightgreen)](http://www.r-pkg.org/pkg/Rcpp)
 
 ### Description
 
