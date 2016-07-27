@@ -64,14 +64,14 @@ Rcpp::NumericVector example_manually_hooked() {
     // and some RcppHoney functions and return it.  The return value will be equal to the following
     // R snippet:
     //     v <- 1:5
-    //     result <- 1 + v + log(v) - v - 1 + sqrt(v) + -v
+    //     result <- v + v + log(v) - v - v + sqrt(v) + -v
     
     // We can store our result in any of RcppHoney::LogicalVector, RcppHoney::IntegerVector, or
     // RcppHoney::NumericVector and simply return it to R.  These classes inherit from their
     // Rcpp counterparts and add a new constructor.  The only copy of the data, in this case, is when
     // we assign our expression to retval.  Since it is then a "native" R type, returning it is a
     // shallow copy.  Alternatively we could write this as:
-    //     return Rcpp::wrap(1 + v + RcppHoney::log(v) - v - 1 + RcppHoney::sqrt(v) + -v2);
+    //     return Rcpp::wrap(l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2);
     
     RcppHoney::NumericVector retval
         =  l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2;
