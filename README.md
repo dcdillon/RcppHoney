@@ -81,7 +81,8 @@ Rcpp::NumericVector example_manually_hooked() {
 
 ### Installation
 
-As RcppHoney is still in alpha state, it is recommended you install from source.
+RcppHoney is still in alpha state, and it is recommended you install from source
+as changes will be frequent.
 
 RcppHoney is also available via the [CRAN](http://cran.r-project.org) network,
 and can be installed from within R via 
@@ -89,10 +90,6 @@ and can be installed from within R via
 ```R
 install.packages("RcppHoney")
 ```
-
-As RcppHoney is still in alpha state, you'll likely have better luck installing from source.
-To install from source, ensure you have a complete package development
-environment for R as discussed in the relevant documentation.
 
 ### Authors
 
