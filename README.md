@@ -1,4 +1,4 @@
-# RcppHoney [![Build Status](https://travis-ci.org/dcdillon/RcppHoney.svg)](https://travis-ci.org/RcppCore/Rcpp) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/RcppHoney)](http://cran.r-project.org/package=Rcpp) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppHoney?color=brightgreen)](http://www.r-pkg.org/pkg/Rcpp)
+# RcppHoney [![Build Status](https://travis-ci.org/dcdillon/RcppHoney.svg)](https://travis-ci.org/dcdillon/RcppHoney) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/RcppHoney)](http://cran.r-project.org/package=RcppHoney) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppHoney?color=brightgreen)](http://www.r-pkg.org/pkg/RcppHoney)
 
 ### Description
 
@@ -78,3 +78,26 @@ Rcpp::NumericVector example_manually_hooked() {
     return retval;
 }
 ```
+
+### Installation
+
+As RcppHoney is still in alpha state, it is recommended you install from source.
+
+RcppHoney is also available via the [CRAN](http://cran.r-project.org) network,
+and can be installed from within R via 
+
+```R
+install.packages("RcppHoney")
+```
+
+As RcppHoney is still in alpha state, you'll likely have better luck installing from source.
+To install from source, ensure you have a complete package development
+environment for R as discussed in the relevant documentation.
+
+### Authors
+
+Daniel C. Dillon
+
+### License
+
+GPL (>= 2)
