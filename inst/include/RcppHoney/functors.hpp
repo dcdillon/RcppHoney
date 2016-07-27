@@ -265,10 +265,10 @@ struct exp {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::exp(*rhs);
+                return std::exp(*rhs);
             }
         } else {
-            return ::exp(*rhs);
+            return std::exp(*rhs);
         }
     }
 };
@@ -281,10 +281,10 @@ struct log {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::log(*rhs);
+                return std::log(*rhs);
             }
         } else {
-            return ::log(*rhs);
+            return std::log(*rhs);
         }
     }
 };
@@ -297,10 +297,10 @@ struct sqrt {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::sqrt(*rhs);
+                return std::sqrt(*rhs);
             }
         } else {
-            return ::sqrt(*rhs);
+            return std::sqrt(*rhs);
         }
     }
 };
@@ -313,10 +313,10 @@ struct acos {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::acos(*rhs);
+                return std::acos(*rhs);
             }
         } else {
-            return ::acos(*rhs);
+            return std::acos(*rhs);
         }
     }
 };
@@ -329,10 +329,10 @@ struct asin {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::asin(*rhs);
+                return std::asin(*rhs);
             }
         } else {
-            return ::asin(*rhs);
+            return std::asin(*rhs);
         }
     }
 };
@@ -345,10 +345,10 @@ struct atan {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::atan(*rhs);
+                return std::atan(*rhs);
             }
         } else {
-            return ::atan(*rhs);
+            return std::atan(*rhs);
         }
     }
 };
@@ -361,10 +361,10 @@ struct ceil {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::ceil(*rhs);
+                return std::ceil(*rhs);
             }
         } else {
-            return ::ceil(*rhs);
+            return std::ceil(*rhs);
         }
     }
 };
@@ -377,10 +377,10 @@ struct cos {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::cos(*rhs);
+                return std::cos(*rhs);
             }
         } else {
-            return ::cos(*rhs);
+            return std::cos(*rhs);
         }
     }
 };
@@ -393,10 +393,10 @@ struct cosh {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::cosh(*rhs);
+                return std::cosh(*rhs);
             }
         } else {
-            return ::cosh(*rhs);
+            return std::cosh(*rhs);
         }
     }
 };
@@ -409,10 +409,10 @@ struct floor {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::floor(*rhs);
+                return std::floor(*rhs);
             }
         } else {
-            return ::floor(*rhs);
+            return std::floor(*rhs);
         }
     }
 };
@@ -425,10 +425,10 @@ struct log10 {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::log10(*rhs);
+                return std::log10(*rhs);
             }
         } else {
-            return ::log10(*rhs);
+            return std::log10(*rhs);
         }
     }
 };
@@ -441,10 +441,10 @@ struct sin {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::sin(*rhs);
+                return std::sin(*rhs);
             }
         } else {
-            return ::sin(*rhs);
+            return std::sin(*rhs);
         }
     }
 };
@@ -457,10 +457,10 @@ struct sinh {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::sinh(*rhs);
+                return std::sinh(*rhs);
             }
         } else {
-            return ::sinh(*rhs);
+            return std::sinh(*rhs);
         }
     }
 };
@@ -473,10 +473,10 @@ struct tan {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::tan(*rhs);
+                return std::tan(*rhs);
             }
         } else {
-            return ::tan(*rhs);
+            return std::tan(*rhs);
         }
     }
 };
@@ -489,10 +489,10 @@ struct tanh {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::tanh(*rhs);
+                return std::tanh(*rhs);
             }
         } else {
-            return ::tanh(*rhs);
+            return std::tanh(*rhs);
         }
     }
 };
@@ -505,10 +505,10 @@ struct abs {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::fabs(*rhs);
+                return std::abs(*rhs);
             }
         } else {
-            return ::fabs(*rhs);
+            return std::abs(*rhs);
         }
     }
 };
@@ -609,6 +609,8 @@ struct pentagamma {
     }
 };
 
+#if __cplusplus >= 201103L
+
 template< typename Iterator, bool NA >
 struct expm1 {
     typedef double return_type;
@@ -617,10 +619,10 @@ struct expm1 {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::expm1(*rhs);
+                return std::expm1(*rhs);
             }
         } else {
-            return ::expm1(*rhs);
+            return std::expm1(*rhs);
         }
     }
 };
@@ -633,13 +635,15 @@ struct log1p {
             if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
-                return ::log1p(*rhs);
+                return std::log1p(*rhs);
             }
         } else {
-            return ::log1p(*rhs);
+            return std::log1p(*rhs);
         }
     }
 };
+
+#endif
 
 template< typename Iterator, bool NA >
 struct factorial {
