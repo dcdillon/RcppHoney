@@ -11,6 +11,8 @@ The goal is to provide full featured interoperability between any iterator based
 ### Example
 
 ```c++
+// [[Rcpp::depends(RcppHoney)]]
+
 #include <RcppHoneyForward.hpp> // we have to do this because we're going to hook in a non-default structure
 #include <list>
 
