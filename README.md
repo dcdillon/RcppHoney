@@ -1,4 +1,4 @@
-# RcppHoney ![Build Status](https://travis-ci.org/dcdillon/cpuaff.svg?branch=master)
+# RcppHoney [![Build Status](https://travis-ci.org/dcdillon/RcppHoney.svg)](https://travis-ci.org/dcdillon/RcppHoney) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/RcppHoney)](http://cran.r-project.org/package=RcppHoney) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppHoney?color=brightgreen)](http://www.r-pkg.org/pkg/RcppHoney)
 
 ### Description
 
@@ -11,6 +11,8 @@ The goal is to provide full featured interoperability between any iterator based
 ### Example
 
 ```c++
+// [[Rcpp::depends(RcppHoney)]]
+
 #include <RcppHoneyForward.hpp> // we have to do this because we're going to hook in a non-default structure
 #include <list>
 
@@ -28,11 +30,11 @@ traits::true_type has_na(const std::list< T, A > &val);
 
 // Tell RcppHoney that it needs to create basic (e.g. std::list + std::list) operators
 template< typename T, typename A >
-RcppHoney::traits::true_type needs_basic_operators(const std::list< T, A > &val);
+traits::true_type needs_basic_operators(const std::list< T, A > &val);
 
 // Tell RcppHoney that it needs to create scalar (e.g. std::list + int/double) operators
 template< typename T, typename A >
-RcppHoney::traits::true_type needs_scalar_operators(const std::list< T, A > &val);
+traits::true_type needs_scalar_operators(const std::list< T, A > &val);
 
 // Tell RcppHoney that this set of types is part of the FAMILY_USER + 1 family.
 // This is used in conjunction with needs_basic_operators.  If you have
@@ -40,7 +42,7 @@ RcppHoney::traits::true_type needs_scalar_operators(const std::list< T, A > &val
 // that are not part of the same family will have binary operators created
 // between them.
 template< typename T, typename A >
-RcppHoney::traits::int_constant< FAMILY_USER + 1 > family(const std::list< T, A > &val);
+traits::int_constant< FAMILY_USER + 1 > family(const std::list< T, A > &val);
 
 } // namespace hooks
 } // namespace RcppHoney
@@ -64,17 +66,37 @@ Rcpp::NumericVector example_manually_hooked() {
     // and some RcppHoney functions and return it.  The return value will be equal to the following
     // R snippet:
     //     v <- 1:5
-    //     result <- 1 + v + log(v) - v - 1 + sqrt(v) + -v
+    //     result <- v + v + log(v) - v - v + sqrt(v) + -v
     
     // We can store our result in any of RcppHoney::LogicalVector, RcppHoney::IntegerVector, or
     // RcppHoney::NumericVector and simply return it to R.  These classes inherit from their
     // Rcpp counterparts and add a new constructor.  The only copy of the data, in this case, is when
     // we assign our expression to retval.  Since it is then a "native" R type, returning it is a
     // shallow copy.  Alternatively we could write this as:
-    //     return Rcpp::wrap(1 + v + RcppHoney::log(v) - v - 1 + RcppHoney::sqrt(v) + -v2);
+    //     return Rcpp::wrap(l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2);
     
     RcppHoney::NumericVector retval
         =  l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2;
     return retval;
 }
 ```
+
+### Installation
+
+RcppHoney is still in alpha state, and it is recommended you install from source
+as changes will be frequent.
+
+RcppHoney is also available via the [CRAN](http://cran.r-project.org) network,
+and can be installed from within R via 
+
+```R
+install.packages("RcppHoney")
+```
+
+### Authors
+
+Daniel C. Dillon
+
+### License
+
+GPL (>= 2)
