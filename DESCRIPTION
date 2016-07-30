@@ -5,11 +5,14 @@ Version: 0.1.1
 Author: Daniel C. Dillon
 Maintainer: Daniel C. Dillon <dcdillon@gmail.com>
 URL: https://github.com/dcdillon/RcppHoney
+BugReports: https://github.com/dcdillon/RcppHoney/issues
 Description: Creates an easy way to use expression templates with R
              semantics on any iterator based structure.
 License: GPL (>= 2)
 LazyData: TRUE
 Imports:
     Rcpp (>= 0.12.5)
+Suggests:
+    RUnit
 LinkingTo:
     Rcpp

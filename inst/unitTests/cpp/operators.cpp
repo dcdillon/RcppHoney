@@ -1,3 +1,5 @@
+// [[Rcpp::depends(RcppHoney)]]
+
 #include <RcppHoney.hpp>
 
 // [[Rcpp::export]]
@@ -46,7 +48,7 @@ Rcpp::NumericVector test_hooked_plus_operand(Rcpp::NumericVector v1, std::vector
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_operand_plus_operand(double s, std::vector< int > v1, std::vector< int > v2) {
+Rcpp::NumericVector test_operand_plus_operand(std::vector< int > v1, std::vector< int > v2) {
     return Rcpp::wrap((v1 + v2) + (v1 + v2));
 }
 

@@ -43,7 +43,7 @@ Rcpp::NumericVector example_manually_hooked() {
     l.push_back(5);
 
     // std::vector is already hooked in to RcppHoney in default_hooks.hpp so we'll
-    // create one of those two
+    // create one of those too
     std::vector< int > v;
     v.push_back(1);
     v.push_back(2);
