@@ -50,8 +50,67 @@ traits::int_constant< FAMILY_USER + 1 > family(const std::list< T, A > &val);
 
 #include <RcppHoney.hpp>
 
+// Let's also add a couple custom honey functions
+namespace RcppHoney {
+
+// first define functors for them in the RcppHoney::functors namespace
+namespace functors {
+
+template< typename Iterator, bool NA >
+struct my_unary_functor {
+    typedef typename std::iterator_traits< Iterator >::value_type rhs_value_type;
+    // since we're just adding a double to the input value the return type should be
+    // the widest numeric type of rhs and double
+    typedef typename traits::widest_numeric_type< rhs_value_type, double >::type return_type;
+    return_type operator()(Iterator &rhs) const {
+        if (NA) {
+            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+                return na< return_type >::VALUE();
+            } else {
+                return *rhs + 1.0;
+            }
+        } else {
+            return *rhs + 1.0;
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct my_binary_functor {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+
+    // since we're just adding a double to the sum of the two inputs, the return type
+    // should be the widest numeric type of lhs, rhs, and double
+    typedef typename traits::widest_numeric_type<
+        double,
+        typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type
+    >::type return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                    && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return *lhs + *rhs + 2.0;
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::Rf_fprec(*lhs, *rhs);
+        }
+    }
+};
+
+} // namespace functors
+
+// now we define the functions in th RcppHoney namespace
+RCPP_HONEY_GENERATE_UNARY_FUNCTION(my_unary_function, my_unary_functor)
+RCPP_HONEY_GENERATE_BINARY_FUNCTION(my_binary_function, my_binary_functor)
+
+} // namespace RcppHoney
+
 // [[Rcpp::export]]
-Rcpp::NumericVector example_manually_hooked() {
+Rcpp::NumericVector rcpphoney_example() {
 
     // We manually hooked std::list in to RcppHoney so we'll create one
     std::list< int > l {1, 2, 3, 4, 5}; // c++11 for brevity here, but not required for RcppHoney
@@ -67,17 +126,19 @@ Rcpp::NumericVector example_manually_hooked() {
     // and some RcppHoney functions and return it.  The return value will be equal to the following
     // R snippet:
     //     v <- 1:5
-    //     result <- v + v + log(v) - v - v + sqrt(v) + -v
+    //     result <- v + v + log(v) - v - v + sqrt(v) + -v + (v + 1.0) + (v + v + 2.0)
     
     // We can store our result in any of RcppHoney::LogicalVector, RcppHoney::IntegerVector, or
     // RcppHoney::NumericVector and simply return it to R.  These classes inherit from their
     // Rcpp counterparts and add a new constructor.  The only copy of the data, in this case, is when
     // we assign our expression to retval.  Since it is then a "native" R type, returning it is a
     // shallow copy.  Alternatively we could write this as:
-    //     return Rcpp::wrap(l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2);
+    //     return Rcpp::wrap(l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2
+    //         + RcppHoney::my_unary_function(l) + RcppHoney::my_binary_function(l, v);
     
     RcppHoney::NumericVector retval
-        =  l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2;
+        =  l + v + RcppHoney::log(v) - v - l + RcppHoney::sqrt(v) + -v2
+            + RcppHoney::my_unary_function(l) + RcppHoney::my_binary_function(l, v);
     return retval;
 }
 ```
