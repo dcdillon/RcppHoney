@@ -729,5 +729,26 @@ private:
     mutable return_type m_previousValue;
 };
 
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct pow {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return std::pow(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return std::pow(*lhs, *rhs);
+        }
+    }
+};
+
 } // namespace functors
 } // namespace RcppHoney

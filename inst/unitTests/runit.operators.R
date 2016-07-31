@@ -19,6 +19,7 @@
 
 .setUp <- RcppHoney:::unit_test_setup("operators.cpp", "RcppHoney")
 
+pow <- function(x, y) {x ^ y}
 test.hooked.and.scalar <- function() {
     v <- 1:100
     s <- 15
@@ -61,6 +62,38 @@ test.unary.function <- function() {
     v <- 1:100
     checkEquals(log(v), test_unary_function_hooked(v))
     checkEquals(log(v + v), test_unary_function_operand(v))
+}
+
+test.binary.function.hooked.and.scalar <- function() {
+    v <- 1:5
+    s <- 2
+    checkEquals(pow(v, s), test_binary_function_hooked_scalar(v, s))
+    checkEquals(pow(s, v), test_binary_function_scalar_hooked(s, v))
+}
+
+test.binary.function.hooked.and.hooked <- function() {
+    v <- 1:5
+    checkEquals(pow(v, v), test_binary_function_hooked_hooked(v, v))
+    checkEquals(pow(v, v), test_binary_function_hooked_other_hooked(v, v))
+    checkEquals(pow(v, v), test_binary_function_other_hooked_hooked(v, v))
+}
+
+test.binary.function.operand.and.scalar <- function() {
+    v <- 1:5
+    s <- 2
+    checkEquals(pow((v + v), s), test_binary_function_operand_scalar(v, v, s))
+    checkEquals(pow(s, (v + v)), test_binary_function_scalar_operand(s, v, v))
+}
+
+test.binary.function.operand.and.hooked <- function() {
+    v <- 1:5
+    checkEquals(pow((v + v), v), test_binary_function_operand_hooked(v, v, v))
+    checkEquals(pow(v, (v + v)), test_binary_function_hooked_operand(v, v, v))
+}
+
+test.binary.function.operand.and.operand <- function() {
+    v <- 1:4
+    checkEquals(pow(v + v, v + v), test_binary_function_operand_operand(v, v))
 }
 
 
@@ -113,4 +146,41 @@ test.na.unary.function <- function() {
     v <- c(v, NA)
     checkEquals(log(v), test_unary_function_hooked(v))
     checkEquals(log(v + v), test_unary_function_operand(v))
+}
+
+test.na.binary.function.hooked.and.scalar <- function() {
+    v <- 1:5
+    v <- c(v, NA)
+    s <- 2
+    checkEquals(pow(v, s), test_binary_function_hooked_scalar(v, s))
+    checkEquals(pow(s, v), test_binary_function_scalar_hooked(s, v))
+}
+
+test.na.binary.function.hooked.and.hooked <- function() {
+    v <- 1:5
+    v <- c(v, NA)
+    checkEquals(pow(v, v), test_binary_function_hooked_hooked(v, v))
+    checkEquals(pow(v, v), test_binary_function_hooked_other_hooked(v, v))
+    checkEquals(pow(v, v), test_binary_function_other_hooked_hooked(v, v))
+}
+
+test.na.binary.function.operand.and.scalar <- function() {
+    v <- 1:5
+    v <- c(v, NA)
+    s <- 2
+    checkEquals(pow((v + v), s), test_binary_function_operand_scalar(v, v, s))
+    checkEquals(pow(s, (v + v)), test_binary_function_scalar_operand(s, v, v))
+}
+
+test.na.binary.function.operand.and.hooked <- function() {
+    v <- 1:5
+    v <- c(v, NA)
+    checkEquals(pow((v + v), v), test_binary_function_operand_hooked(v, v, v))
+    checkEquals(pow(v, (v + v)), test_binary_function_hooked_operand(v, v, v))
+}
+
+test.na.binary.function.operand.and.operand <- function() {
+    v <- 1:4
+    v <- c(v, NA)
+    checkEquals(pow(v + v, v + v), test_binary_function_operand_operand(v, v))
 }
