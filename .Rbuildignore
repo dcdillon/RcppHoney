@@ -3,3 +3,4 @@
 ^\.travis\.yml$
 ^doxygen.*$
 ^Doxyfile$
+^README.md$
