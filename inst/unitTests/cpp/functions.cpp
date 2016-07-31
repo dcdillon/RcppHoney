@@ -196,6 +196,11 @@ Rcpp::NumericVector test_trunc(Rcpp::NumericVector v) {
 }
 
 // [[Rcpp::export]]
+Rcpp::NumericVector test_diff(Rcpp::NumericVector v) {
+    return Rcpp::wrap(RcppHoney::diff(v));
+}
+
+// [[Rcpp::export]]
 Rcpp::NumericVector test_pow(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
     return Rcpp::wrap(RcppHoney::pow(v1, v2));
 }

@@ -53,7 +53,7 @@ _FNAME_ (const T &rhs) {                                                        
 
 #define RCPP_HONEY_GENERATE_BINARY_FUNCTION(_FNAME_, _FUNCTOR_)                                                        \
 template< typename T, typename T_ITER, typename T_RESULT, typename U, typename U_ITER, typename U_RESULT >             \
-inline RcppHoney::binary_operator< T_ITER, U_ITER,                                                                     \
+RcppHoney::binary_operator< T_ITER, U_ITER,                                                                            \
     RcppHoney::functors:: _FUNCTOR_ < T_ITER, U_ITER, (T::NA || U::NA) >,                                              \
     (T::NA || U::NA)                                                                                                   \
 >                                                                                                                      \
@@ -66,7 +66,7 @@ _FNAME_ (const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs,                  
 }                                                                                                                      \
                                                                                                                        \
 template< typename T, typename T_ITER, typename T_RESULT, typename U >                                                 \
-inline typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< U >::value,                             \
+typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< U >::value,                                    \
     RcppHoney::binary_operator< T_ITER, typename RcppHoney::scalar_operator< U >::const_iterator,                      \
         RcppHoney::functors:: _FUNCTOR_ < T_ITER, typename RcppHoney::scalar_operator< U >::const_iterator, T::NA >,   \
         T::NA                                                                                                          \
@@ -78,7 +78,7 @@ _FNAME_ (const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs, const U &rhs) {  
 }                                                                                                                      \
                                                                                                                        \
 template< typename T, typename U, typename U_ITER, typename U_RESULT >                                                 \
-inline typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< T >::value,                             \
+typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< T >::value,                                    \
     RcppHoney::binary_operator< typename RcppHoney::scalar_operator< T >::const_iterator, U_ITER,                      \
         RcppHoney::functors:: _FUNCTOR_ < typename RcppHoney::scalar_operator< T >::const_iterator, U_ITER, U::NA >,   \
         U::NA                                                                                                          \
@@ -90,7 +90,7 @@ _FNAME_ (const T &lhs, const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {  
 }                                                                                                                      \
                                                                                                                        \
 template< typename T, typename U >                                                                                     \
-inline typename RcppHoney::traits::enable_if<                                                                          \
+typename RcppHoney::traits::enable_if<                                                                                 \
     (RcppHoney::hook< T >::value && RcppHoney::hook< U >::value),                                                      \
     RcppHoney::binary_operator<                                                                                        \
         typename RcppHoney::hook< T >::const_iterator,                                                                 \
@@ -115,7 +115,7 @@ _FNAME_ (const T &lhs, const U &rhs) {                                          
 }                                                                                                                      \
                                                                                                                        \
 template< typename T, typename T_ITER, typename T_RESULT, typename U >                                                 \
-inline typename RcppHoney::traits::enable_if< RcppHoney::hook< U >::value,                                             \
+typename RcppHoney::traits::enable_if< RcppHoney::hook< U >::value,                                                    \
     RcppHoney::binary_operator<                                                                                        \
         T_ITER,                                                                                                        \
         typename RcppHoney::hook< U >::const_iterator,                                                                 \
@@ -139,7 +139,7 @@ _FNAME_ (const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs, const U &rhs) {  
 }                                                                                                                      \
                                                                                                                        \
 template< typename T, typename U, typename U_ITER, typename U_RESULT >                                                 \
-inline typename RcppHoney::traits::enable_if< RcppHoney::hook< T >::value,                                             \
+typename RcppHoney::traits::enable_if< RcppHoney::hook< T >::value,                                                    \
     RcppHoney::binary_operator<                                                                                        \
         typename RcppHoney::hook< T >::const_iterator,                                                                 \
         U_ITER,                                                                                                        \
@@ -163,7 +163,7 @@ _FNAME_ (const T &lhs, const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {  
 }                                                                                                                      \
                                                                                                                        \
 template< typename T, typename U >                                                                                     \
-inline typename RcppHoney::traits::enable_if<                                                                          \
+typename RcppHoney::traits::enable_if<                                                                                 \
     RcppHoney::traits::is_primitive< T >::value                                                                        \
     && RcppHoney::hook< U >::value,                                                                                    \
     RcppHoney::binary_operator<                                                                                        \
@@ -189,7 +189,7 @@ _FNAME_ (const T &lhs, const U &rhs) {                                          
 }                                                                                                                      \
                                                                                                                        \
 template< typename T, typename U >                                                                                     \
-inline typename RcppHoney::traits::enable_if<                                                                          \
+typename RcppHoney::traits::enable_if<                                                                                 \
     RcppHoney::traits::is_primitive< U >::value                                                                        \
     && RcppHoney::hook< T >::value,                                                                                    \
     RcppHoney::binary_operator<                                                                                        \

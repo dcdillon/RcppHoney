@@ -134,6 +134,7 @@ test.unary.functions <- function() {
     checkEquals(factorial(v), test_factorial(v))
     checkEquals(lfactorial(v), test_lfactorial(v))
     checkEquals(trunc(v), test_trunc(v))
+    checkEquals(diff(v), test_diff(v))
 }
 
 test.binary.functions <- function() {
@@ -176,6 +177,7 @@ test.na.unary.functions <- function() {
     checkEquals(factorial(v), test_factorial(v))
     checkEquals(lfactorial(v), test_lfactorial(v))
     checkEquals(trunc(v), test_trunc(v))
+    checkEquals(diff(v), test_diff(v))
 }
 
 test.na.binary.functions <- function() {
