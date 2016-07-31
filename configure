@@ -1,0 +1,11 @@
+MYOS=`uname -s`
+
+echo $MYOS
+
+if [ "$(echo "$MYOS" | cut -c1-5)" = "SunOS" ]; then
+	cp src/Makevars.solaris src/Makevars
+	cp inst/onLoad/onLoad.solaris.R R
+else
+	cp src/Makevars.gcc src/Makevars
+	cp inst/onLoad/onLoad.gcc.R R
+fi
