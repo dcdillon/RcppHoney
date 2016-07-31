@@ -750,5 +750,145 @@ struct pow {
     }
 };
 
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct choose {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return ::Rf_choose(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::Rf_choose(*lhs, *rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct lchoose {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return ::Rf_lchoose(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::Rf_lchoose(*lhs, *rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct beta {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return ::Rf_beta(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::Rf_beta(*lhs, *rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct lbeta {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return ::Rf_lbeta(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::Rf_lbeta(*lhs, *rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct psigamma {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return ::Rf_psigamma(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::Rf_psigamma(*lhs, *rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct round {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return ::Rf_fround(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::Rf_fround(*lhs, *rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct signif {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return ::Rf_fprec(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::Rf_fprec(*lhs, *rhs);
+        }
+    }
+};
+
 } // namespace functors
 } // namespace RcppHoney
