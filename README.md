@@ -12,7 +12,16 @@ The goal is to provide full featured interoperability between any iterator based
 
 ```c++
 // [[Rcpp::plugins(cpp11)]]
+
+// Tell Rcpp that we need RcppHoney
+
 // [[Rcpp::depends(RcppHoney)]]
+
+// The following line is VERY important.  Without it you will create seriously bloated
+// (with debugging symbols) libraries.  For example, the RcppHoney package's .so file
+// would be ~13MB without this plugin.  With it, it is ~54KB.
+
+// [[Rcpp::plugins(RcppHoney)]]
 
 #include <RcppHoneyForward.hpp> // we have to do this because we're going to hook in a non-default structure
 #include <list>
