@@ -7,4 +7,3 @@ src/*.so
 src/*.dll
 src/symbols.rds
 src/Makevars
-R/onLoad*
