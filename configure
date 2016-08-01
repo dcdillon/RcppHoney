@@ -4,8 +4,6 @@ echo $MYOS
 
 if [ "$(echo "$MYOS" | cut -c1-5)" = "SunOS" ]; then
 	cp src/platform/Makevars.solaris src/Makevars
-	cp inst/onLoad/onLoad.solaris.R R
 else
 	cp src/platform/Makevars.gcc src/Makevars
-	cp inst/onLoad/onLoad.gcc.R R
 fi
