@@ -296,9 +296,10 @@ Let us put this all together now.
 
 ## Example
 
-```{r, engine='Rcpp'}
+```c++
 // Let Rcpp know we need RcppHoney
 // [[Rcpp::depends(RcppHoney)]]
+// [[Rcpp::plugins(RcppHoney)]]
 
 #include <RcppHoney.hpp>
 

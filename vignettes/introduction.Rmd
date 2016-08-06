@@ -55,9 +55,10 @@ The following example shows how to hook in a custom data structure
 (in this case `std::list`) as well as the types of expressions that can be
 created once a data structure is hooked in.
 
-```{r, engine='Rcpp'}
+```c++
 // Let Rcpp know we need RcppHoney
 // [[Rcpp::depends(RcppHoney)]]
+// [[Rcpp::plugins(RcppHoney)]]
 
 // we have to do this because we're going to hook in a non-default structure
 // otherwise we'd just #include <RcppHoney.hpp>
