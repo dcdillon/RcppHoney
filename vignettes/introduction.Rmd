@@ -2,12 +2,16 @@
 title: "RcppHoney Introduction"
 author: Daniel C. Dillon
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: html_document
 vignette: >
   %\VignetteIndexEntry{RcppHoney Introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## Rationale
 
@@ -55,7 +59,7 @@ The following example shows how to hook in a custom data structure
 (in this case `std::list`) as well as the types of expressions that can be
 created once a data structure is hooked in.
 
-```c++
+```{Rcpp}
 // Let Rcpp know we need RcppHoney
 // [[Rcpp::depends(RcppHoney)]]
 // [[Rcpp::plugins(RcppHoney)]]
