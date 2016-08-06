@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{RcppHoney Introduction}
-  %\VignetteEngine{kintr::rmarkdown}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -40,11 +40,11 @@ numbers of operands and lack of a current use case).
 
 Let us look at `RcppHoney::functors::log` and `RcppHoney::functors::pow`:
 
-```
+```c++
 // From RcppHoney/functors.hpp
 
 namespace RcppHoney {
-namespace Functors {
+namespace functors {
 
 template< typename Iterator, bool NA >
 struct log {
@@ -82,14 +82,14 @@ struct pow {
     }
 };
 
-} // namespace Functors
+} // namespace functors
 } // namespace RcppHoney
 ```
 
 Let us deconstruct this a bit.  First note that the both `log` and `pow` are
 templated.
 
-```
+```c++
 template< typename Iterator, bool NA >
 struct log;
 
@@ -133,7 +133,7 @@ that are "hooked" in to `RcppHoney`.
 For unary functions like `log` the function signatures that need to be created
 are as follows (in pseudoish code):
 
-```
+```c++
 namespace RcppHoney {
 
 operand< ... > log(const operand< ... > &);
@@ -145,7 +145,7 @@ operand< ... > log(const hooked_type &);
 For binary functions like `pow` the function signatures that need to be created
 are:
 
-```
+```c++
 namespace RcppHoney {
 
 operand< ... > pow(const operand< ... > &, const operand< ... > &);
@@ -162,7 +162,7 @@ operand< ... > pow(const hooked_type &, const hooked_type &)
 
 Fortunately, `RcppHoney` provides macros to define these for us.
 
-```
+```c++
 RCPP_HONEY_GENERATE_UNARY_FUNCTION(FUNCTION_NAME, FUNCTOR_NAME)
 RCPP_HONEY_GENERATE_BINARY_FUNCTION(FUNCTION_NAME, FUNCTOR_NAME)
 ```
@@ -170,7 +170,7 @@ RCPP_HONEY_GENERATE_BINARY_FUNCTION(FUNCTION_NAME, FUNCTOR_NAME)
 `RcppHoney` makes some assumptions about the namespaces that these macro
 parameters live in, so all we need to say to create all the functions is:
 
-```
+```c++
 RCPP_HONEY_GENERATE_UNARY_FUNCTION(log, log)
 RCPP_HONEY_GENERATE_BINARY_FUNCTION(pow, pow)
 ```
@@ -186,7 +186,7 @@ parameter and a binary function `bar` that is overloaded such that its return
 type is the wider of the two parameter types and the parameter types are some
 permutation of `int`, and `double`.
 
-```
+```c++
 int foo(double d) {
     if (d >= 0) {
         return int(d + .5);
@@ -203,7 +203,7 @@ double bar(double x, double y) {return x + y;}
 
 We now have to create function objects for these:
 
-```
+```c++
 namespace RcppHoney {
 namespace functors {
 
@@ -283,7 +283,7 @@ Finally, we need to declare our functions to actually integrate this with
 This restriction could technically be removed, but it can help prevent name
 collisions, so we have decided to keep it.
 
-```
+```c++
 namespace RcppHoney {
 
 RCPP_HONEY_GENERATE_UNARY_FUNCTION(foo, foo)
