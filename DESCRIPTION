@@ -13,6 +13,8 @@ LazyData: TRUE
 Imports:
     Rcpp (>= 0.12.5)
 Suggests:
-    RUnit
+    RUnit,
+    knitr,
+    rmarkdown
 LinkingTo:
     Rcpp
