@@ -1,0 +1,407 @@
+---
+title: "Adding a Custom Function to RcppHoney"
+author: Daniel C. Dillon
+date: "`r Sys.Date()`"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{RcppHoney Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+`RcppHoney` provides default functions that are executed appropriately with 
+[expression templates](https://en.wikipedia.org/wiki/Expression_templates),
+however a user may want to use a function of his/her own in an `RcppHoney`
+expression (and also reap the benefits of expression templates).  Fortunately
+there is a fairly easy way to accomplish this.
+
+## The Example (for the impatient)
+
+What follows essentially uses the same pattern as a native `RcppHoney` function
+and must simply be defined by the user before using it in code.  For this
+example, let us suppose we have created a unary function `foo` that returns an
+`int` and takes a `double` as its lone parameter and a binary function `bar`
+that is overloaded such that its return type is the wider of the two parameter
+types and the parameter types are some permutation of `int`, and `double`.
+
+```{Rcpp}
+// Let Rcpp know we need RcppHoney
+// [[Rcpp::depends(RcppHoney)]]
+// [[Rcpp::plugins(RcppHoney)]]
+
+#include <RcppHoney.hpp>
+
+int foo(double d) {
+    if (d >= 0) {
+        return int(d + .5);
+    } else {
+        return int(d - .5);
+    }
+}
+
+int bar(int x, int y) {return x + y;}
+double bar(int x, double y) {return x + y;}
+double bar(double x, int y) {return x + y;}
+double bar(double x, double y) {return x + y;}
+
+namespace RcppHoney {
+namespace functors {
+
+template< typename Iterator, bool NA >
+struct foo {
+    typedef int return_type;
+    return_type operator()(Iterator &rhs) const {
+        if (NA) {
+            if (na< typename traits::ctype<
+                    typename std::iterator_traits< Iterator >::value_type
+                >::type >::is_na(*rhs)) {
+                return na< return_type >::VALUE();
+            } else {
+                return ::foo(*rhs);
+            }
+        } else {
+            return ::foo(*rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct bar {
+    typedef typename std::iterator_traits< LhsIterator >::value_type
+        lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type
+        rhs_value_type;
+    typedef typename traits::widest_numeric_type< lhs_value_type,
+        rhs_value_type >::type return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type
+                >::is_na(*lhs) && !na< typename traits::ctype<
+                    rhs_value_type >::type >::is_na(*rhs)) {
+                return ::bar(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::bar(*lhs, *rhs);
+        }
+    }
+};
+
+} // namespace functors
+} // namespace RcppHoney
+
+namespace RcppHoney {
+
+RCPP_HONEY_GENERATE_UNARY_FUNCTION(foo, foo)
+RCPP_HONEY_GENERATE_BINARY_FUNCTION(bar, bar)
+
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector example_custom_function(Rcpp::NumericVector v,
+    Rcpp::NumericVector w) {
+
+    RcppHoney::NumericVector retval = RcppHoney::foo(v) + RcppHoney::bar(v, w);
+    return retval;
+}
+```
+
+Now it is time to understand what this all means.
+
+## Background
+
+First, let us discuss how functions are applied.  `RcppHoney` essentially builds
+up iterators that know how to execute the expression for each element in the
+container.  When that iterator is dereferenced, the magic happens.  Each
+sub-expression along the way is evaluated to come to a final value of the
+dereferenced iterator.  The operations that need to be executed are defined by
+[function objects](https://en.wikipedia.org/wiki/Function_object).  These
+function objects implement `operator()(operand1, [operand2])` which
+which means that as long as we know the type of the function object (and how to
+construct it), we can apply it to the appropriate operands.  These function
+objects in `RcppHoney` live in the `RcppHoney::functor` namespace because it's
+shorter to type than `RcppHoney::function_objects`.
+
+Function objects in `RcppHoney` take iterators as their operands so that we can
+pass unevaluated expressions along to each of them and, again, defer the actual
+operations until the final iterator dereferencing.  `RcppHoney` currently only
+supports unary and binary functions.  Ternary functions are currently not
+supported, but may be in the future (this is a result of the combinatorial
+explosion of function definitions that must be created to handle increasing
+numbers of operands and lack of a current use case).
+
+Let us look at `RcppHoney::functors::log` and `RcppHoney::functors::pow`:
+
+```c++
+// From RcppHoney/functors.hpp
+
+namespace RcppHoney {
+namespace functors {
+
+template< typename Iterator, bool NA >
+struct log {
+    typedef double return_type;
+    return_type operator()(Iterator &rhs) const {
+        if (NA) {
+            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+                return na< return_type >::VALUE();
+            } else {
+                return std::log(*rhs);
+            }
+        } else {
+            return std::log(*rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct pow {
+    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef double return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
+                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+                return std::pow(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return std::pow(*lhs, *rhs);
+        }
+    }
+};
+
+} // namespace functors
+} // namespace RcppHoney
+```
+
+Let us deconstruct this a bit.  First note that the both `log` and `pow` are
+templated.
+
+```c++
+template< typename Iterator, bool NA >
+struct log;
+
+template< typename LhsIterator, typename RhsIterator, bool NA >
+```
+
+They are both templated over the operand iterator type(s) and a boolean
+value `NA`.  This is a requirement for `RcppHoney` function objects.  The
+iterator types (`Iterator`, `LhsIterator`, and `RhsIterator`) tell us what kind
+of operands to expect.  The `NA` boolean lets us handle this function
+differently depending on whether the user wants to respect the `NA` values from
+`R` which are non-standard extensions of the common `C++` types `int` and
+`double`.
+
+Each of the structs includes a local `typedef` called `return_type`.  This
+tells `RcppHoney` what the return type of this function object is going to be.
+In these two cases, `return_type` is simply another name for `double` because
+both `std::pow` and `std::log` have a return type of `double`.
+
+Now to the meat of it.  Both structs define `operator()(...)`.  For `log`, which
+only takes one parameter, this function takes one parameter of type `Iterator`,
+over which the `struct` is templated.  For `pow`, which takes two parameters,
+the `operator()(...)` function takes two parameters of types `LhsIterator` and
+`RhsIterator` respectively.
+
+The bodies of the `operator()(...)` functions are actually quite simple.  If
+`NA` is `true` then we check for `NA` values and return the appropriate value
+if the operands are `NA`.  Otherwise we simply apply the function to the
+dereferenced value(s) of the operand(s).
+
+Any function object defined by these rules is fair game for use in
+`RcppHoney`.
+
+Now we have function objects, but in general they are somewhat annoying to call
+as we have to instantiate an object of the function object's type and then
+call `operator()(...)` on it.  Also, we need to already know the iterator(s)
+that we want to use as the operand(s).  This is far from convenient, so we
+create functions in the `RcppHoney` namespace that can take any of the types
+that are "hooked" in to `RcppHoney`.
+
+For unary functions like `log` the function signatures that need to be created
+are as follows (in pseudoish code):
+
+```c++
+namespace RcppHoney {
+
+operand< ... > log(const operand< ... > &);
+operand< ... > log(const hooked_type &);
+
+} // namespace
+```
+
+For binary functions like `pow` the function signatures that need to be created
+are:
+
+```c++
+namespace RcppHoney {
+
+operand< ... > pow(const operand< ... > &, const operand< ... > &);
+operand< ... > pow(const scalar &, const operand< ... > &);
+operand< ... > pow(const operand< ... > &, const scalar &);
+operand< ... > pow(const scalar &, const hooked_type &);
+operand< ... > pow(const hooked_type &, const scalar &);
+operand< ... > pow(const operand< ... > &, const hooked_type &);
+operand< ... > pow(const hooked_type &, const operand< ... > &);
+operand< ... > pow(const hooked_type &, const hooked_type &);
+
+} // namespace RcppHoney
+```
+
+Fortunately, `RcppHoney` provides macros to define these for us.
+
+```c++
+RCPP_HONEY_GENERATE_UNARY_FUNCTION(FUNCTION_NAME, FUNCTOR_NAME)
+RCPP_HONEY_GENERATE_BINARY_FUNCTION(FUNCTION_NAME, FUNCTOR_NAME)
+```
+
+`RcppHoney` makes some assumptions about the namespaces that these macro
+parameters live in, so all we need to say to create all the functions is:
+
+```c++
+RCPP_HONEY_GENERATE_UNARY_FUNCTION(log, log)
+RCPP_HONEY_GENERATE_BINARY_FUNCTION(pow, pow)
+```
+
+## The Example (explained)
+
+When we added `RcppHoney` functions for `foo` and `bar` we wrote a lot of
+unexplained code.  Here we will go through it step by step in more detail.
+
+#### The Functions
+
+First we have the functions that we wish to use with `RcppHoney` objects (and
+hooked objects).  These functions are fairly representative of the types of
+functions that we might want to leverage inside `RcppHoney` expressions.  There
+is a third class of function which we might want to add which is the truly
+templated function.  This is, in essence, a more general case of the `bar`
+example and is left as an exercise for the reader.
+
+```c++
+int foo(double d) {
+    if (d >= 0) {
+        return int(d + .5);
+    } else {
+        return int(d - .5);
+    }
+}
+
+int bar(int x, int y) {return x + y;}
+double bar(int x, double y) {return x + y;}
+double bar(double x, int y) {return x + y;}
+double bar(double x, double y) {return x + y;}
+```
+
+#### The Function Objects
+
+Next we need to create our function object wrappers for these functions:
+
+```c++
+namespace RcppHoney {
+namespace functors {
+
+template< typename Iterator, bool NA >
+struct foo {
+    typedef int return_type;
+    return_type operator()(Iterator &rhs) const {
+        if (NA) {
+            if (na< typename traits::ctype<
+                    typename std::iterator_traits< Iterator >::value_type
+                >::type >::is_na(*rhs)) {
+                return na< return_type >::VALUE();
+            } else {
+                return ::foo(*rhs);
+            }
+        } else {
+            return ::foo(*rhs);
+        }
+    }
+};
+
+template< typename LhsIterator, typename RhsIterator, bool NA = true >
+struct bar {
+    typedef typename std::iterator_traits< LhsIterator >::value_type
+        lhs_value_type;
+    typedef typename std::iterator_traits< RhsIterator >::value_type
+        rhs_value_type;
+    typedef typename traits::widest_numeric_type< lhs_value_type,
+        rhs_value_type >::type return_type;
+
+    inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
+        if (NA) {
+            if (!na< typename traits::ctype< lhs_value_type >::type
+                >::is_na(*lhs) && !na< typename traits::ctype<
+                    rhs_value_type >::type >::is_na(*rhs)) {
+                return ::bar(*lhs, *rhs);
+            }
+
+            return na< return_type >::VALUE();
+        } else {
+            return ::bar(*lhs, *rhs);
+        }
+    }
+};
+
+} // namespace functors
+} // namespace RcppHoney
+```
+
+There is a little bit of magic here using `std::iterator_traits`,
+`traits::ctype` and `traits::widest_numeric_type`.  The full implementation of
+these is beyond the scope of this document, but in brief:
+
+* `std::iterator_traits` is part of the `C++` standard library and is
+  described [here](http://en.cppreference.com/w/cpp/iterator/iterator_traits).
+* `traits::ctype` lets us derive the best `C++` type for a given type.  It
+  is restricted to `int`, `double`, and `Rcomplex` because these are the types
+that `R` supports.
+* `traits::widest_numeric_type` lets us pick the "wider" of the two types
+
+The practical upshot of it all is that with these classes, we can code our
+function objects to know their `return_type` and also appropriately test for
+`NA` values if the `NA` template parameter is `true`.  It is important to note
+here that we have added an `if` statement with respect to the `NA` template
+value.  We could also accomplish this with 
+[template specialization](https://en.wikipedia.org/wiki/Generic_programming#Template_specialization)
+however, the `NA` template value is known at compile time and compilers are
+smart enough to simply optimize out things that look like `if (false)` at
+compile time.
+
+It is also important to note that these function objects _MUST_ be defined in
+the `RcppHoney::functors` namespace.  This is because the macros use to create
+the functions that will use these function objects assume that to be the case.
+
+#### The Integration
+
+Finally, we need to declare our functions to actually integrate this with
+`RcppHoney`.  They should be declared inside the `RcppHoney` namespace.
+This restriction could technically be removed, but it can help prevent name
+collisions, so we have decided to keep it.
+
+```c++
+namespace RcppHoney {
+
+RCPP_HONEY_GENERATE_UNARY_FUNCTION(foo, foo)
+RCPP_HONEY_GENERATE_BINARY_FUNCTION(bar, bar)
+
+} // namespace RcppHoney
+```
+
+## Wrapping Up
+
+Integrating our own custom functions with `RcppHoney` can add flexibility to
+our code as well as help with performance.  By following this pattern we can
+get expression template evaluation within `RcppHoney` for any unary or binary
+function that we wish to use.
