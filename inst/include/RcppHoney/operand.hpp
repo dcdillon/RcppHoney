@@ -32,11 +32,11 @@ public:
     typedef Result result_type;
 
 public:
-    uint64_t length() const {
+    int64_t length() const {
         return static_cast< const T * >(this)->length();
     }
 
-    uint64_t size() const {
+    int64_t size() const {
         return static_cast< const T * >(this)->size();
     }
 

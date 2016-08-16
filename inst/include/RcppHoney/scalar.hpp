@@ -124,7 +124,7 @@ public:
     scalar(const T &val) :
         m_value(val) {}
 
-    uint64_t length() const {return 1;}
+    int64_t length() const {return 1;}
     const_iterator begin() const {return const_iterator(m_value);}
     const_iterator end() const {return const_iterator(m_value, true);}
 
