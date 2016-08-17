@@ -23,6 +23,7 @@
 #include <cstddef>
 #include "operand.hpp"
 #include "hook.hpp"
+#include "exceptions.hpp"
 
 namespace RcppHoney {
 
@@ -110,14 +111,20 @@ private:
     Op m_operator;
 
 public:
-    binary_operator(LhsIterator lhsBegin, LhsIterator lhsEnd, uint64_t lhsSize,
-        RhsIterator rhsBegin, RhsIterator rhsEnd, uint64_t rhsSize, const Op &op) :
+    binary_operator(LhsIterator lhsBegin, LhsIterator lhsEnd, int64_t lhsSize,
+        RhsIterator rhsBegin, RhsIterator rhsEnd, int64_t rhsSize, const Op &op) :
             m_lhsBegin(lhsBegin), m_lhsEnd(lhsEnd), m_rhsBegin(rhsBegin),
                 m_rhsEnd(rhsEnd), m_length(std::max(lhsSize, rhsSize)),
-                    m_operator(op) {}
+                    m_operator(op) {
 
-    uint64_t length() const {return m_length;}
-    uint64_t size() const {return m_length;}
+        if (lhsSize != rhsSize && lhsSize != -1 && rhsSize != -1) {
+            std::cout << lhsSize << ", " << rhsSize << std::endl;
+            throw bounds_exception();
+        }
+    }
+
+    int64_t length() const {return m_length;}
+    int64_t size() const {return m_length;}
     const_iterator begin() const {return const_iterator(m_lhsBegin, m_rhsBegin, &m_operator);}
     const_iterator end() const {return const_iterator(m_lhsEnd, m_rhsEnd, &m_operator);}
 };
@@ -127,6 +134,7 @@ struct make_binary_operator
 {
     template< typename LHS, typename RHS, typename Op >
     binary_operator< typename LHS::const_iterator, typename RHS::const_iterator, Op, NA > operator()(const LHS &lhs, const RHS &rhs, const Op &op) {
+
         return binary_operator< typename LHS::const_iterator, typename RHS::const_iterator, Op, NA >(
                 lhs.begin(), lhs.end(), hooks::extract_size(lhs),
                 rhs.begin(), rhs.end(), hooks::extract_size(rhs),

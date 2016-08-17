@@ -17,40 +17,14 @@
 
 #pragma once
 
-#include <Rcpp.h>
-#include <stdint.h>
-#include <cstddef>
+#include <exception>
 
 namespace RcppHoney {
-
-template< typename T, typename Iterator, typename Result >
-class operand
-{
-public:
-    typedef Iterator const_iterator;
-    typedef const_iterator iterator;
-    typedef Result result_type;
-
-public:
-    int64_t length() const {
-        return static_cast< const T * >(this)->length();
-    }
-
-    int64_t size() const {
-        return static_cast< const T * >(this)->size();
-    }
-
-    const_iterator begin() const {
-        return static_cast< const T * >(this)->begin();
-    }
-
-    const_iterator end() const {
-        return static_cast< const T * >(this)->end();
-    }
-
-    result_type operator[](ptrdiff_t n) const {
-        return *(static_cast< const T * >(this)->begin() + n);
+    
+class bounds_exception : public std::exception {
+    virtual const char *what() const throw() {
+        return "operand size mismatch";
     }
 };
-
+    
 } // namespace RcppHoney

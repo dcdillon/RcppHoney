@@ -103,11 +103,11 @@ private:
     Op m_operator;
 
 public:
-    unary_operator(const InputIterator &begin, const InputIterator &end, uint64_t size, const Op &op) :
+    unary_operator(const InputIterator &begin, const InputIterator &end, int64_t size, const Op &op) :
         m_begin(begin), m_end(end), m_length(size), m_operator(op) {}
 
-    uint64_t length() const {return m_length;}
-    uint64_t size() const {return m_length;}
+    int64_t length() const {return m_length;}
+    int64_t size() const {return m_length;}
     const_iterator begin() const {return const_iterator(m_begin, m_operator);}
     const_iterator end() const {return const_iterator(m_end, m_operator);}
 };
