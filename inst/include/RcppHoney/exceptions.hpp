@@ -22,7 +22,7 @@
 namespace RcppHoney {
     
 class bounds_exception : public std::exception {
-    virtual std::string what() {
+    virtual const char *what() const throw() {
         return "operand size mismatch";
     }
 };
