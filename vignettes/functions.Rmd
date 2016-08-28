@@ -33,7 +33,6 @@ types and the parameter types are some permutation of `int`, and `double`.
 ```{Rcpp}
 // Let Rcpp know we need RcppHoney
 // [[Rcpp::depends(RcppHoney)]]
-// [[Rcpp::plugins(RcppHoney)]]
 
 #include <RcppHoney.hpp>
 
