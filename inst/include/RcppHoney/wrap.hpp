@@ -27,10 +27,19 @@ template< typename T, typename T_ITER, typename T_RESULT > SEXP wrap(
     const RcppHoney::operand< T, T_ITER, T_RESULT > &obj) {
 
     const int RTYPE = Rcpp::traits::r_sexptype_traits< T_RESULT >::rtype;
-    Shield< SEXP > x( Rf_allocVector(RTYPE, obj.end() - obj.begin()));
-    std::transform(obj.begin(), obj.end(), internal::r_vector_start< RTYPE >(x),
-        internal::caster< T, T_RESULT >);
-    return x;
+    RcppHoney::dims_t dims = obj.dims();
+
+    if (dims.second == 0) {
+        Shield< SEXP > x(Rf_allocVector(RTYPE, obj.size()));
+        std::transform(obj.begin(), obj.end(), internal::r_vector_start< RTYPE >(x),
+            internal::caster< T, T_RESULT >);
+        return x;
+    } else {
+        Shield< SEXP > x(Rf_allocMatrix(RTYPE, dims.first, dims.second));
+        std::transform(obj.begin(), obj.end(), internal::r_vector_start< RTYPE >(x),
+            internal::caster< T, T_RESULT >);
+        return x;
+    }
 }
 
 } // namespace traits

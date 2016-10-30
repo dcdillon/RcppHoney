@@ -21,9 +21,12 @@
 
 test.hooked.and.scalar <- function() {
     v <- 1:100
+    m <- matrix(1:100, 10, 10)
     s <- 15
     checkEquals(v + s, test_hooked_plus_scalar(v, s))
     checkEquals(s + v, test_scalar_plus_hooked(s, v))
+    checkEquals(m + s, test_matrix_plus_scalar(m, s))
+    checkEquals(s + m, test_scalar_plus_matrix(s, m))
 }
 
 test.hooked.and.hooked <- function() {

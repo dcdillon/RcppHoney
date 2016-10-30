@@ -54,7 +54,7 @@ namespace RcppHoney {
 namespace functors {
 
 template< typename Iterator, bool NA >
-struct foo {
+struct foo : public unary_result_dims {
     typedef int return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -72,7 +72,7 @@ struct foo {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct bar {
+struct bar : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type
         lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type

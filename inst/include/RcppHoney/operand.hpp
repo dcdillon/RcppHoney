@@ -18,6 +18,7 @@
 #pragma once
 
 #include <Rcpp.h>
+#include <RcppHoneyForward.hpp>
 #include <stdint.h>
 #include <cstddef>
 
@@ -32,8 +33,8 @@ public:
     typedef Result result_type;
 
 public:
-    int64_t length() const {
-        return static_cast< const T * >(this)->length();
+    dims_t dims() const {
+        return static_cast< const T * >(this)->dims();
     }
 
     int64_t size() const {

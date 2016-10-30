@@ -22,11 +22,37 @@
 #include "traits/widest_numeric_type.hpp"
 #include "traits/ctype.hpp"
 #include "na.hpp"
+#include "exceptions.hpp"
 
 namespace RcppHoney {
 namespace functors {
+    
+struct unary_result_dims
+{
+    inline dims_t result_dims(const dims_t &rhs) const {
+        return rhs;
+    }
+};
+
+struct binary_result_dims
+{
+    inline dims_t result_dims(const dims_t &lhs, const dims_t &rhs) const {
+        if (lhs.first == -1) {
+            return rhs;
+        }
+        else if (rhs.first == -1) {
+            return lhs;
+        }
+        else if (lhs == rhs) {
+            return lhs;
+        } else {
+            throw bounds_exception();
+        }
+    }
+};
+    
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct plus {
+struct plus : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
@@ -46,7 +72,7 @@ struct plus {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct minus {
+struct minus : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
@@ -66,7 +92,7 @@ struct minus {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct times {
+struct times : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
@@ -86,7 +112,7 @@ struct times {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct divided_by {
+struct divided_by : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
@@ -106,7 +132,7 @@ struct divided_by {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA >
-struct greater {
+struct greater : public binary_result_dims {
     typedef int return_type;
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
@@ -126,7 +152,7 @@ struct greater {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA >
-struct greater_equal {
+struct greater_equal : public binary_result_dims {
     typedef int return_type;
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
@@ -146,7 +172,7 @@ struct greater_equal {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA >
-struct less {
+struct less : public binary_result_dims {
     typedef int return_type;
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
@@ -166,7 +192,7 @@ struct less {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA >
-struct less_equal {
+struct less_equal : public binary_result_dims {
     typedef int return_type;
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
@@ -186,7 +212,7 @@ struct less_equal {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA >
-struct equal {
+struct equal : public binary_result_dims {
     typedef int return_type;
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
@@ -206,7 +232,7 @@ struct equal {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA >
-struct not_equal {
+struct not_equal : public binary_result_dims {
     typedef int return_type;
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
@@ -226,7 +252,7 @@ struct not_equal {
 };
 
 template< typename RhsIterator, bool NA = true >
-struct unary_minus {
+struct unary_minus : public unary_result_dims {
     typedef typename std::iterator_traits< RhsIterator >::value_type return_type;
     inline return_type operator()(RhsIterator &rhs) const {
         if (NA) {
@@ -242,7 +268,7 @@ struct unary_minus {
 };
 
 template< typename RhsIterator, bool NA = true >
-struct unary_not {
+struct unary_not : public unary_result_dims {
     typedef typename std::iterator_traits< RhsIterator >::value_type return_type;
     inline return_type operator()(RhsIterator &rhs) const {
         if (NA) {
@@ -258,7 +284,7 @@ struct unary_not {
 };
 
 template< typename Iterator, bool NA >
-struct exp {
+struct exp : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -274,7 +300,7 @@ struct exp {
 };
 
 template< typename Iterator, bool NA >
-struct log {
+struct log : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -290,7 +316,7 @@ struct log {
 };
 
 template< typename Iterator, bool NA >
-struct sqrt {
+struct sqrt : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -306,7 +332,7 @@ struct sqrt {
 };
 
 template< typename Iterator, bool NA >
-struct acos {
+struct acos : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -322,7 +348,7 @@ struct acos {
 };
 
 template< typename Iterator, bool NA >
-struct asin {
+struct asin : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -338,7 +364,7 @@ struct asin {
 };
 
 template< typename Iterator, bool NA >
-struct atan {
+struct atan : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -354,7 +380,7 @@ struct atan {
 };
 
 template< typename Iterator, bool NA >
-struct ceil {
+struct ceil : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -370,7 +396,7 @@ struct ceil {
 };
 
 template< typename Iterator, bool NA >
-struct cos {
+struct cos : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -386,7 +412,7 @@ struct cos {
 };
 
 template< typename Iterator, bool NA >
-struct cosh {
+struct cosh : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -402,7 +428,7 @@ struct cosh {
 };
 
 template< typename Iterator, bool NA >
-struct floor {
+struct floor : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -418,7 +444,7 @@ struct floor {
 };
 
 template< typename Iterator, bool NA >
-struct log10 {
+struct log10 : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -434,7 +460,7 @@ struct log10 {
 };
 
 template< typename Iterator, bool NA >
-struct sin {
+struct sin : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -450,7 +476,7 @@ struct sin {
 };
 
 template< typename Iterator, bool NA >
-struct sinh {
+struct sinh : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -466,7 +492,7 @@ struct sinh {
 };
 
 template< typename Iterator, bool NA >
-struct tan {
+struct tan : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -482,7 +508,7 @@ struct tan {
 };
 
 template< typename Iterator, bool NA >
-struct tanh {
+struct tanh : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -498,7 +524,7 @@ struct tanh {
 };
 
 template< typename Iterator, bool NA >
-struct abs {
+struct abs : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -514,7 +540,7 @@ struct abs {
 };
 
 template< typename Iterator, bool NA >
-struct gamma {
+struct gamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -530,7 +556,7 @@ struct gamma {
 };
 
 template< typename Iterator, bool NA >
-struct lgamma {
+struct lgamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -546,7 +572,7 @@ struct lgamma {
 };
 
 template< typename Iterator, bool NA >
-struct digamma {
+struct digamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -562,7 +588,7 @@ struct digamma {
 };
 
 template< typename Iterator, bool NA >
-struct trigamma {
+struct trigamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -578,7 +604,7 @@ struct trigamma {
 };
 
 template< typename Iterator, bool NA >
-struct tetragamma {
+struct tetragamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -594,7 +620,7 @@ struct tetragamma {
 };
 
 template< typename Iterator, bool NA >
-struct pentagamma {
+struct pentagamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -612,7 +638,7 @@ struct pentagamma {
 #if __cplusplus >= 201103L
 
 template< typename Iterator, bool NA >
-struct expm1 {
+struct expm1 : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -628,7 +654,7 @@ struct expm1 {
 };
 
 template< typename Iterator, bool NA >
-struct log1p {
+struct log1p : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -646,7 +672,7 @@ struct log1p {
 #endif
 
 template< typename Iterator, bool NA >
-struct factorial {
+struct factorial : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -662,7 +688,7 @@ struct factorial {
 };
 
 template< typename Iterator, bool NA >
-struct lfactorial {
+struct lfactorial : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -678,7 +704,7 @@ struct lfactorial {
 };
 
 template< typename Iterator, bool NA >
-struct trunc {
+struct trunc : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
@@ -723,6 +749,10 @@ struct diff {
             return retval;
         }
     }
+    
+    inline dims_t result_dims(const dims_t &rhs) const {
+        return dims_t(rhs.first - 1, rhs.second);
+    }
 
 private:
     mutable Iterator m_previousIterator;
@@ -731,7 +761,7 @@ private:
 
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct pow {
+struct pow : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef double return_type;
@@ -751,7 +781,7 @@ struct pow {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct choose {
+struct choose : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef double return_type;
@@ -771,7 +801,7 @@ struct choose {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct lchoose {
+struct lchoose : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef double return_type;
@@ -791,7 +821,7 @@ struct lchoose {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct beta {
+struct beta : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef double return_type;
@@ -811,7 +841,7 @@ struct beta {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct lbeta {
+struct lbeta : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef double return_type;
@@ -831,7 +861,7 @@ struct lbeta {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct psigamma {
+struct psigamma : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef double return_type;
@@ -851,7 +881,7 @@ struct psigamma {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct round {
+struct round : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef double return_type;
@@ -871,7 +901,7 @@ struct round {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct signif {
+struct signif : public binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
     typedef double return_type;

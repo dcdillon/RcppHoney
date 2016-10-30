@@ -85,8 +85,8 @@ public:
     scalar_operator(const T &val) :
         m_value(val) {}
 
-    int64_t length() const {return -1;}
-    int64_t size() const {return -1;}
+    dims_t dims() const {return std::make_pair(-1, 0);}
+    uint64_t size() const {return -1;}
     const_iterator begin() const {return const_iterator(m_value);}
     const_iterator end() const {return const_iterator(m_value);}
 };

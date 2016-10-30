@@ -99,15 +99,18 @@ public:
 private:
     InputIterator m_begin;
     InputIterator m_end;
-    std::size_t m_length;
+    dims_t m_dims;
     Op m_operator;
 
 public:
-    unary_operator(const InputIterator &begin, const InputIterator &end, int64_t size, const Op &op) :
-        m_begin(begin), m_end(end), m_length(size), m_operator(op) {}
+    unary_operator(const InputIterator &begin, const InputIterator &end, dims_t dims, const Op &op) :
+        m_begin(begin), m_end(end), m_dims(op.result_dims(dims)), m_operator(op) {}
 
-    int64_t length() const {return m_length;}
-    int64_t size() const {return m_length;}
+    dims_t dims() const {return m_dims;}
+    int64_t size() const {
+        return (m_dims.second != 0) ? m_dims.first * m_dims.second
+            : m_dims.first;
+    }
     const_iterator begin() const {return const_iterator(m_begin, m_operator);}
     const_iterator end() const {return const_iterator(m_end, m_operator);}
 };
@@ -116,7 +119,7 @@ template< bool NA >
 struct make_unary_operator {
     template< typename T, typename Op >
     unary_operator< typename T::const_iterator, Op, NA > operator()(const T &obj, const Op &op) {
-        return unary_operator< typename T::const_iterator, Op, NA >(obj.begin(), obj.end(), hooks::extract_size(obj), op);
+        return unary_operator< typename T::const_iterator, Op, NA >(obj.begin(), obj.end(), hooks::extract_dims(obj), op);
     }
 };
 

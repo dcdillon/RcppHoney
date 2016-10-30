@@ -13,6 +13,16 @@ Rcpp::NumericVector test_scalar_plus_hooked(double s, std::vector< int > v1) {
 }
 
 // [[Rcpp::export]]
+Rcpp::IntegerMatrix test_matrix_plus_scalar(Rcpp::IntegerMatrix m1, double s) {
+    return Rcpp::wrap(m1 + s);
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix test_scalar_plus_matrix(double s, Rcpp::IntegerMatrix m1) {
+    return Rcpp::wrap(s + m1);
+}
+
+// [[Rcpp::export]]
 Rcpp::NumericVector test_hooked_plus_hooked(std::vector< int > v1, std::vector< int > v2) {
     return Rcpp::wrap(v1 + v2);
 }

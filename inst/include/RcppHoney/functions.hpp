@@ -264,10 +264,15 @@ RCPP_HONEY_GENERATE_BINARY_FUNCTION(signif, signif)
 template< typename T, typename T_ITER, typename T_RESULT >
 unary_operator< T_ITER, functors::diff< T_ITER, T::NA >, T::NA >
 diff(const operand< T, T_ITER, T_RESULT > &rhs) {
+
+    if (rhs.dims().second != 0) {
+        throw bounds_exception();
+    }
+
     T_ITER begin = rhs.begin();
     ++begin;
     return unary_operator< T_ITER, functors::diff< T_ITER, T::NA >, T::NA >(
-        begin, rhs.end(), hooks::extract_size(rhs) - 1, functors::diff< T_ITER, T::NA >());
+        begin, rhs.end(), dims_t(rhs.dims().first - 1, 0), functors::diff< T_ITER, T::NA >());
 }
 
 template< typename T >
@@ -280,6 +285,12 @@ typename traits::enable_if<
     >
 >::type
 diff(const T &rhs) {
+    dims_t dims = hooks::extract_dims(rhs);
+
+    if (dims.second != 0) {
+        throw bounds_exception();
+    }
+
     typename hook< T >::const_iterator begin = rhs.begin();
     ++begin;
 
@@ -287,7 +298,7 @@ diff(const T &rhs) {
         typename hook< T >::const_iterator,
         functors::diff< typename hook< T >::const_iterator, hook< T >::NA >,
         hook< T >::NA
-    >(begin, rhs.end(), hooks::extract_size(rhs) - 1,
+    >(begin, rhs.end(), dims_t(dims.first - 1, 0),
         functors::diff< typename hook< T >::const_iterator, hook< T >::NA >());
 }
 

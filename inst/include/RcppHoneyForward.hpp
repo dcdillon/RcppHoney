@@ -25,8 +25,11 @@
 #include "RcppHoney/traits/is_primitive.hpp"
 #include "RcppHoney/traits/result_of.hpp"
 #include "RcppHoney/traits/widest_numeric_type.hpp"
+#include <stdint.h>
 
 namespace RcppHoney {
+
+typedef std::pair< uint64_t, uint64_t > dims_t;
 
 template< typename T, typename T_ITER, typename T_RESULT >
 class operand;
