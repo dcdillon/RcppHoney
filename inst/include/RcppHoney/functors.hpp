@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <Rcpp.h>
 #include <cmath>
 #include "traits/widest_numeric_type.hpp"
 #include "traits/ctype.hpp"

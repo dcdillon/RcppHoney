@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <Rcpp.h>
 #include "operand.hpp"
 #include <algorithm>
 

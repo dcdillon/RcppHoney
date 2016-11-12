@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <Rcpp.h>
 #include "operand.hpp"
 #include "scalar_operator.hpp"
 #include "unary_operator.hpp"

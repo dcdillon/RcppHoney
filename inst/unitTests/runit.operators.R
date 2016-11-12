@@ -103,3 +103,14 @@ test.na.unary.operator <- function() {
     checkEquals(-v, test_unary_operator_hooked(v))
     checkEquals(-(v + v), test_unary_operator_operand(v))
 }
+
+test.matrix.plus.matrix <- function() {
+    m <- matrix(c(1, 2, 3, 4), 2, 2)
+    checkIdentical(m + m, test_matrix_plus_matrix(m, m))
+}
+
+test.matrix.unary.operator <- function() {
+    m <- matrix(c(1, 2, 3, 4), 2, 2)
+    checkIdentical(-m, test_matrix_unary_operator(m))
+    checkIdentical(-(m + m), test_matrix_unary_operator_operand(m))
+}

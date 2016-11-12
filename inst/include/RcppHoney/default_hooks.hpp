@@ -51,5 +51,43 @@ RcppHoney::traits::true_type needs_scalar_operators(const Rcpp::VectorBase< RTYP
 template< int RTYPE, bool NA, typename T >
 RcppHoney::traits::int_constant< 2 > family(const Rcpp::VectorBase< RTYPE, NA, T > &val);
 
+
+
+
+
+
+
+// hooks for Rcpp::VectorBase
+template< int RTYPE, template<typename> typename StoragePolicy >
+RcppHoney::traits::true_type is_hooked(const Rcpp::Matrix< RTYPE, StoragePolicy > &val);
+
+// return the appropriate NA value
+template< int RTYPE, template<typename> typename StoragePolicy >
+RcppHoney::traits::true_type has_na(const Rcpp::Matrix< RTYPE, StoragePolicy > &val);
+
+// assert that we need to create basic operators
+template< int RTYPE, template<typename> typename StoragePolicy >
+RcppHoney::traits::true_type needs_basic_operators(const Rcpp::Matrix< RTYPE, StoragePolicy > &val);
+
+// assert that we need to create type + scalar operators
+template< int RTYPE, template<typename> typename StoragePolicy >
+RcppHoney::traits::true_type needs_scalar_operators(const Rcpp::Matrix< RTYPE, StoragePolicy > &val);
+
+// call this family 3
+template< int RTYPE, template<typename> typename StoragePolicy >
+RcppHoney::traits::int_constant< 3 > family(const Rcpp::Matrix< RTYPE, StoragePolicy > &val);
+
+template< int RTYPE, template<typename> typename StoragePolicy >
+dims_t extract_dims(
+    const Rcpp::Matrix< RTYPE, StoragePolicy > &obj)
+{
+    return dims_t(obj.nrow(), obj.ncol());
+}
+
+template< typename T, typename T_ITER, typename T_RESULT >
+dims_t extract_dims(const operand< T, T_ITER, T_RESULT > &obj) {
+    return obj.dims();
+}
+
 } // namespace hooks
 } // namespace RcppHoney

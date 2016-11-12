@@ -17,9 +17,10 @@
 
 #pragma once
 
+#define RCPP_NO_SUGAR
+
 #include "RcppHoneyForward.hpp"
 #include <Rcpp.h>
-#include "RcppHoney/wrap.hpp"
 #include "RcppHoney/operators.hpp"
 #include "RcppHoney/functions.hpp"
 #include "RcppHoney/storage.hpp"

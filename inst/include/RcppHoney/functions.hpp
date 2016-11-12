@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <Rcpp.h>
 #include "operand.hpp"
 #include "scalar_operator.hpp"
 #include "unary_operator.hpp"
@@ -272,7 +271,7 @@ diff(const operand< T, T_ITER, T_RESULT > &rhs) {
     T_ITER begin = rhs.begin();
     ++begin;
     return unary_operator< T_ITER, functors::diff< T_ITER, T::NA >, T::NA >(
-        begin, rhs.end(), dims_t(rhs.dims().first - 1, 0), functors::diff< T_ITER, T::NA >());
+        begin, rhs.end(), rhs.dims(), functors::diff< T_ITER, T::NA >());
 }
 
 template< typename T >
@@ -298,7 +297,7 @@ diff(const T &rhs) {
         typename hook< T >::const_iterator,
         functors::diff< typename hook< T >::const_iterator, hook< T >::NA >,
         hook< T >::NA
-    >(begin, rhs.end(), dims_t(dims.first - 1, 0),
+    >(begin, rhs.end(), dims,
         functors::diff< typename hook< T >::const_iterator, hook< T >::NA >());
 }
 

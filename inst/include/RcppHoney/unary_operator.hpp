@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <Rcpp.h>
 #include <iterator>
 #include <algorithm>
 #include <cstddef>
@@ -104,7 +103,9 @@ private:
 
 public:
     unary_operator(const InputIterator &begin, const InputIterator &end, dims_t dims, const Op &op) :
-        m_begin(begin), m_end(end), m_dims(op.result_dims(dims)), m_operator(op) {}
+        m_begin(begin), m_end(end), m_dims(op.result_dims(dims)), m_operator(op)
+    {
+    }
 
     dims_t dims() const {return m_dims;}
     int64_t size() const {

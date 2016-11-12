@@ -34,6 +34,9 @@ typedef std::pair< uint64_t, uint64_t > dims_t;
 template< typename T, typename T_ITER, typename T_RESULT >
 class operand;
 
+template< typename LhsIterator, typename RhsIterator, typename Op, bool NA_VALUE >
+class binary_operator;
+
 namespace hooks {
 
 static const int FAMILY_USER = 1024;
@@ -47,12 +50,3 @@ struct const_iterator {
 } // namespace hooks
 
 } // namespace RcppHoney
-
-namespace Rcpp {
-namespace traits {
-
-template< typename T, typename T_ITER, typename T_RESULT > SEXP wrap(
-    const RcppHoney::operand< T, T_ITER, T_RESULT > &obj);
-
-} // namespace traits
-} // namespace Rcpp
