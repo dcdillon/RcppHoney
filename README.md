@@ -66,7 +66,7 @@ namespace RcppHoney {
 namespace functors {
 
 template< typename Iterator, bool NA >
-struct my_unary_functor {
+struct my_unary_functor : public unary_result_dims {
     typedef typename std::iterator_traits< Iterator >::value_type rhs_value_type;
     // since we're just adding a double to the input value the return type should be
     // the widest numeric type of rhs and double
@@ -85,7 +85,7 @@ struct my_unary_functor {
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
-struct my_binary_functor {
+struct my_binary_functor : binary_result_dims {
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
 
