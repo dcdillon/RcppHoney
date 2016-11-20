@@ -18,6 +18,8 @@ echo $SHLIB_CXXLD_RESULTS
 if [ $SHLIB_LD_RESULTS -eq 0 ] && [ $SHLIB_CXXLD_RESULTS -eq 0 ]; then
     echo "GCC compatible linkers found."
     cp src/platform/Makevars.gcc src/Makevars
+    cp inst/platform/plugin.R.gcc R/plugin.R
 else
     cp src/platform/Makevars.solaris src/Makevars
+    cp inst/platform/plugin.R.solaris R/plugin.R
 fi
