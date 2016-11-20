@@ -1,24 +1,9 @@
-SHLIB_LD=`R CMD config SHLIB_LD`
-SHLIB_CXXLD=`R CMD config SHLIB_CXXLD`
+MYOS=`uname -s`
 
-if [ "$SHLIB_LD" != "" ]; then
-    $SHLIB_LD --version | grep -P 'gcc|clang|g\+\+'
-    SHLIB_LD_RESULTS=$?
-fi
+echo $MYOS
 
-if [ "$SHLIB_CXXLD" != "" ]; then
-    $SHLIB_CXXLD --version | grep -P 'gcc|clang|g\+\+'
-    SHLIB_CXXLD_RESULTS=$?
-fi
-
-echo $SHLIB_LD_RESULTS
-echo $SHLIB_CXXLD_RESULTS
-
-#if [ "$(echo "$MYOS" | cut -c1-5)" = "SunOS" ]; then
-if [ $SHLIB_LD_RESULTS -eq 0 ] && [ $SHLIB_CXXLD_RESULTS -eq 0 ]; then
-    echo "GCC compatible linkers found.  Shared libraries will be stripped."
-    cp src/platform/Makevars.gcc src/Makevars
+if [ "$(echo "$MYOS" | cut -c1-5)" = "SunOS" ]; then
+	cp src/platform/Makevars.solaris src/Makevars
 else
-    echo "No GCC compatible linkers found.  Shared libraries will not be stripped."
-    cp src/platform/Makevars.solaris src/Makevars
+	cp src/platform/Makevars.gcc src/Makevars
 fi
