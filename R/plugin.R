@@ -10,7 +10,7 @@
     shlib_ld_good <- any(grepl(linker_pattern, shlib_ld_results))
     shlib_cxxld_good <- any(grepl(linker_pattern, shlib_cxxld_results))
 
-    libs <- (shlib_ld_good && shlib_cxxld_good) "-Wl,-S" else ""
+    libs <- if (shlib_ld_good && shlib_cxxld_good) "-Wl,-S" else ""
 
     libs
 }
