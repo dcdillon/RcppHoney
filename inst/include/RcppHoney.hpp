@@ -17,7 +17,9 @@
 
 #pragma once
 
+#ifndef RCPP_HONEY_SUGAR_INTEROP
 #define RCPP_NO_SUGAR
+#endif
 
 #include "RcppHoneyForward.hpp"
 #include <Rcpp.h>
