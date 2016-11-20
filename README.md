@@ -1,4 +1,4 @@
-# RcppHoney [![Build Status](https://travis-ci.org/dcdillon/RcppHoney.svg)](https://travis-ci.org/dcdillon/RcppHoney) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/RcppHoney)](http://cran.r-project.org/package=RcppHoney) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppHoney?color=brightgreen)](http://www.r-pkg.org/pkg/RcppHoney)
+# RcppHoney [![Build Status](https://travis-ci.org/dcdillon/RcppHoney.svg?branch=master)](https://travis-ci.org/dcdillon/RcppHoney) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/RcppHoney)](http://cran.r-project.org/package=RcppHoney) [![Downloads](http://cranlogs.r-pkg.org/badges/RcppHoney?color=brightgreen)](http://www.r-pkg.org/pkg/RcppHoney)
 
 ### Description
 
@@ -16,12 +16,6 @@ The goal is to provide full featured interoperability between any iterator based
 // Tell Rcpp that we need RcppHoney
 
 // [[Rcpp::depends(RcppHoney)]]
-
-// The following line is VERY important.  Without it you will create seriously bloated
-// (with debugging symbols) libraries.  For example, the RcppHoney package's .so file
-// would be ~13MB without this plugin.  With it, it is ~54KB.
-
-// [[Rcpp::plugins(RcppHoney)]]
 
 #include <RcppHoneyForward.hpp> // we have to do this because we're going to hook in a non-default structure
 #include <list>
