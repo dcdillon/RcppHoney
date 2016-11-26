@@ -39,7 +39,9 @@ traits::true_type needs_scalar_operators(...);
 traits::int_constant< 1 > family(...);
 
 template< typename T >
-int64_t extract_size(const T &obj) {return obj.size();}
+dims_t extract_dims(const T &obj) {
+    return dims_t(obj.size(), 0);
+}
 
 } // namespace hooks
 

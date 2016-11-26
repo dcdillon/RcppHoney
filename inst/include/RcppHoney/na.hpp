@@ -17,7 +17,8 @@
 
 #pragma once
 
-#include <Rcpp.h>
+#include <Rinternals.h>
+#include <Rmath.h>
 
 namespace RcppHoney {
 
@@ -34,6 +35,19 @@ template<>
 struct na< double > {
     static const double VALUE() {return NA_REAL;}
     static const bool is_na(double val) {return R_IsNA(val);}
+};
+
+template< typename T >
+struct rtype {};
+
+template<>
+struct rtype< int > {
+    static const int value = INTSXP;
+};
+
+template<>
+struct rtype< double > {
+    static const int value = REALSXP;
 };
 
 } // namespace RcppHoney

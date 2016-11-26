@@ -21,9 +21,12 @@
 
 test.hooked.and.scalar <- function() {
     v <- 1:100
+    m <- matrix(1:100, 10, 10)
     s <- 15
     checkEquals(v + s, test_hooked_plus_scalar(v, s))
     checkEquals(s + v, test_scalar_plus_hooked(s, v))
+    checkEquals(m + s, test_matrix_plus_scalar(m, s))
+    checkEquals(s + m, test_scalar_plus_matrix(s, m))
 }
 
 test.hooked.and.hooked <- function() {
@@ -99,4 +102,15 @@ test.na.unary.operator <- function() {
     v <- c(v, NA)
     checkEquals(-v, test_unary_operator_hooked(v))
     checkEquals(-(v + v), test_unary_operator_operand(v))
+}
+
+test.matrix.plus.matrix <- function() {
+    m <- matrix(c(1, 2, 3, 4), 2, 2)
+    checkIdentical(m + m, test_matrix_plus_matrix(m, m))
+}
+
+test.matrix.unary.operator <- function() {
+    m <- matrix(c(1, 2, 3, 4), 2, 2)
+    checkIdentical(-m, test_matrix_unary_operator(m))
+    checkIdentical(-(m + m), test_matrix_unary_operator_operand(m))
 }

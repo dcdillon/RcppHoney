@@ -1,0 +1,126 @@
+# Copyright (C) 2016 Daniel C. Dillon
+#
+# r-stripper is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# r-stripper is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with r-stripper.  If not, see <http://www.gnu.org/licenses/>.
+
+# Interrogate R for what linkers it will use when compiling C/C++ code.
+
+SHLIB_LD=`R CMD config SHLIB_LD`
+SHLIB_CXXLD=`R CMD config SHLIB_CXXLD`
+
+# First run the commands defined by SHLIB_LD and SHLIB_CXXLD with --version
+# to get a description string.  If the string implies that this is a gcc
+# compatible linker, then set the appropriate results variable to 1
+
+SHLIB_LD_RESULTS=0
+SHLIB_CXXLD_RESULTS=0
+
+if [ "$SHLIB_LD" != "" ]; then
+    OUTPUT=`$SHLIB_LD --version`
+    
+    case "$OUTPUT" in
+        *gcc*) SHLIB_LD_RESULTS=1 ;;
+        *g++*) SHLIB_LD_RESULTS=1 ;;
+        *clang*) SHLIB_LD_RESULTS=1 ;;
+    esac
+fi
+
+if [ "$SHLIB_CXXLD" != "" ]; then
+    OUTPUT=`$SHLIB_CXXLD --version`
+    
+    case "$OUTPUT" in
+        *gcc*) SHLIB_CXXLD_RESULTS=1 ;;
+        *g++*) SHLIB_CXXLD_RESULTS=1 ;;
+        *clang*) SHLIB_CXXLD_RESULTS=1 ;;
+    esac
+fi
+
+# Clean up any temporary files we created previously
+
+rm -f src/Makevars.R_STRIP_LINKER_OPTION
+
+# If both SHLIB_LD and SHLIB_CXXLD are gcc compatible, then we can use the
+# -Wl,-S option to strip debugging symbols out of the shared library we create.
+# If not, then we'll need set R_STRIP_LINKER_OPTION to an empty string.
+
+if [ $SHLIB_LD_RESULTS -eq 1 ] && [ $SHLIB_CXXLD_RESULTS -eq 1 ]; then
+    echo "GCC compatible linkers found."
+    
+    # If there is a pre-existing Makevars file, go through it and remove the
+    # line where we assign to R_STRIP_LINKER_OPTION.  Also, if there is already
+    # a line that assigns to PKG_LIBS, make sure it adds
+    # $(R_STRIP_LINKER_OPTION) to the end.  Store the results in
+    # src/Makevars.R_STRIP_LINKER_OPTION
+    
+    FOUND_PKG_LIBS_ASSIGNMENT=0
+    
+    if [ -f src/Makevars ]; then
+        while read -r LINE || [ -n "$LINE" ]; do
+            case "$LINE" in
+                *PKG_LIBS*=*)
+                    case "$LINE" in
+                        *R_STRIP_LINKER_OPTION*)
+                            echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
+                        *)
+                            echo "$LINE \$(R_STRIP_LINKER_OPTION)" \
+                                >> src/Makevars.R_STRIP_LINKER_OPTION ;;
+                    esac
+                    FOUND_PKG_LIBS_ASSIGNMENT=1
+                    ;;
+                *R_STRIP_LINKER_OPTION*) ;;
+                *) echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
+            esac
+        done <src/Makevars
+    fi
+    
+    # Place the proper value in R_STRIP_LINKER_OPTION
+    
+    echo "R_STRIP_LINKER_OPTION=\"-Wl,-S\"" \
+        >> src/Makevars.R_STRIP_LINKER_OPTION
+    
+    # If there wasn't an assignment to PKG_LIBS already in place, then we need
+    # to add one to get our R_STRIP_LINKER_OPTION in there.
+    
+    if [ $FOUND_PKG_LIBS_ASSIGNMENT -eq 0 ]; then
+        echo "PKG_LIBS = \$(R_STRIP_LINKER_OPTION)" \
+            >> src/Makevars.R_STRIP_LINKER_OPTION
+    fi
+else
+    # We don't have a linker that we can tell to strip the debugging symbols
+    # so simply remove any previous assignment to R_STRIP_LINKER_OPTION.
+    # When we're done we'll add a line defining it as empty string (in case
+    # there are references to it elsewhere)
+    
+    if [ -f src/Makevars ]; then
+        while read -r LINE || [ -n "$LINE" ]; do
+            case "$LINE" in
+                *PKG_LIBS*=*R_STRIP_LINKER_OPTION*)
+                    LINE=${LINE% \$(R_STRIP_LINKER_OPTION)}
+                    echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
+                *R_STRIP_LINKER_OPTION=*) ;;
+                *) echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
+            esac
+        done <src/Makevars
+    fi
+fi
+
+# If we created a src/Makevars.R_STRIP_LINKER_OPTION file, then backup the
+# current Makevars file and rename our modified version to Makevars.
+
+if [ -f src/Makevars.R_STRIP_LINKER_OPTION ]; then
+    if [ -f src/Makevars ]; then
+        mv src/Makevars src/Makevars.R_STRIP_LINKER_OPTION.bak
+    fi
+    
+    mv src/Makevars.R_STRIP_LINKER_OPTION src/Makevars
+fi

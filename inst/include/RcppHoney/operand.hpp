@@ -17,23 +17,23 @@
 
 #pragma once
 
-#include <Rcpp.h>
+#include <RcppHoneyForward.hpp>
 #include <stdint.h>
 #include <cstddef>
 
 namespace RcppHoney {
 
-template< typename T, typename Iterator, typename Result >
+template< typename T, typename T_ITER, typename T_RESULT >
 class operand
 {
 public:
-    typedef Iterator const_iterator;
+    typedef T_ITER const_iterator;
     typedef const_iterator iterator;
-    typedef Result result_type;
+    typedef T_RESULT result_type;
 
 public:
-    int64_t length() const {
-        return static_cast< const T * >(this)->length();
+    dims_t dims() const {
+        return static_cast< const T * >(this)->dims();
     }
 
     int64_t size() const {
@@ -50,6 +50,26 @@ public:
 
     result_type operator[](ptrdiff_t n) const {
         return *(static_cast< const T * >(this)->begin() + n);
+    }
+    
+    operator SEXP() const
+    {
+        const int RTYPE = Rcpp::traits::r_sexptype_traits< T_RESULT >::rtype;
+        RcppHoney::dims_t dim = dims();
+    
+        if (dim.second == 0) {
+            Rcpp::Shield< SEXP > x(Rf_allocVector(RTYPE, size()));
+            std::copy(begin(), end(), Rcpp::internal::r_vector_start< RTYPE >(x));
+            //std::transform(obj.begin(), obj.end(), internal::r_vector_start< RTYPE >(x),
+            //    internal::caster< T, T_RESULT >);
+            return x;
+        } else {
+            Rcpp::Shield< SEXP > x(Rf_allocMatrix(RTYPE, dim.first, dim.second));
+            std::copy(begin(), end(), Rcpp::internal::r_vector_start< RTYPE >(x));
+            //std::transform(obj.begin(), obj.end(), internal::r_vector_start< RTYPE >(x),
+            //    internal::caster< T, T_RESULT >);
+            return x;
+        }
     }
 };
 

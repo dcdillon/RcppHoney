@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <Rcpp.h>
 #include "operand.hpp"
 #include <algorithm>
 
@@ -49,5 +48,34 @@ public:
             std::copy(rhs.begin(), rhs.end(), begin());
     }
 };
+
+class LogicalMatrix : public Rcpp::LogicalMatrix {
+public:
+    template< typename T, typename T_ITER, typename T_RESULT >
+    LogicalMatrix(const operand< T, T_ITER, T_RESULT > &rhs)
+        : Rcpp::LogicalMatrix(rhs.dims().first, rhs.dims().second) {
+            std::copy(rhs.begin(), rhs.end(), begin());
+    }
+};
+
+class IntegerMatrix : public Rcpp::IntegerMatrix {
+public:
+    template< typename T, typename T_ITER, typename T_RESULT >
+    IntegerMatrix(const operand< T, T_ITER, T_RESULT > &rhs)
+        : Rcpp::IntegerMatrix(rhs.dims().first, rhs.dims().second) {
+            std::copy(rhs.begin(), rhs.end(), begin());
+    }
+};
+
+class NumericMatrix : public Rcpp::NumericMatrix {
+public:
+    template< typename T, typename T_ITER, typename T_RESULT >
+    NumericMatrix(const operand< T, T_ITER, T_RESULT > &rhs)
+        : Rcpp::NumericMatrix(rhs.dims().first, rhs.dims().second) {
+            std::copy(rhs.begin(), rhs.end(), begin());
+    }
+};
+
+
 
 } // namespace RcppHoney
