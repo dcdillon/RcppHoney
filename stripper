@@ -53,7 +53,7 @@ rm -f src/Makevars.R_STRIP_LINKER_OPTION
 # -Wl,-S option to strip debugging symbols out of the shared library we create.
 # If not, then we'll need set R_STRIP_LINKER_OPTION to an empty string.
 
-if [ $SHLIB_LD_RESULTS -eq 0 ] && [ $SHLIB_CXXLD_RESULTS -eq 1 ]; then
+if [ $SHLIB_LD_RESULTS -eq 1 ] && [ $SHLIB_CXXLD_RESULTS -eq 1 ]; then
     echo "GCC compatible linkers found."
     
     # If there is a pre-existing Makevars file, go through it and remove the
@@ -104,6 +104,9 @@ else
     if [ -f src/Makevars ]; then
         while read -r LINE || [ -n "$LINE" ]; do
             case "$LINE" in
+                *PKG_LIBS*=*R_STRIP_LINKER_OPTION*)
+                    LINE=${LINE% \$(R_STRIP_LINKER_OPTION)}
+                    echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
                 *R_STRIP_LINKER_OPTION=*) ;;
                 *) echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
             esac
