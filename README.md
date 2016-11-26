@@ -6,7 +6,7 @@
 
 The goal is to provide full featured interoperability between any iterator based structures and `R` to reduce development time and simplify code.
 
-`RcppHoney` is in alpha state (so the API is still subject to change, but is way more stable than it was a week ago).
+`RcppHoney` is now in a beta state so the API should no longer be changing.
 
 ### Example
 
@@ -148,14 +148,20 @@ Rcpp::NumericVector rcpphoney_example() {
 
 ### Installation
 
-RcppHoney is still in alpha state, and it is recommended you install from source
-as changes will be frequent.
+RcppHoney is now a in beta state!
 
-RcppHoney is also available via the [CRAN](http://cran.r-project.org) network,
+RcppHoney is available via the [CRAN](http://cran.r-project.org) network,
 and can be installed from within R via 
 
 ```R
 install.packages("RcppHoney")
+```
+
+RcppHoney can also be installed from the github sources by running
+
+```
+git clone git@github.com:dcdillon/RcppHoney
+R CMD INSTALL RcppHoney
 ```
 
 ### Authors
