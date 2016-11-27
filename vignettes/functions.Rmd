@@ -4,7 +4,7 @@ author: Daniel C. Dillon
 date: "`r Sys.Date()`"
 output: html_document
 vignette: >
-  %\VignetteIndexEntry{RcppHoney Introduction}
+  %\VignetteIndexEntry{RcppHoney - Custom Functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

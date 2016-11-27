@@ -95,23 +95,6 @@ if [ $SHLIB_LD_RESULTS -eq 1 ] && [ $SHLIB_CXXLD_RESULTS -eq 1 ]; then
         echo "PKG_LIBS = \$(R_STRIP_LINKER_OPTION)" \
             >> src/Makevars.R_STRIP_LINKER_OPTION
     fi
-else
-    # We don't have a linker that we can tell to strip the debugging symbols
-    # so simply remove any previous assignment to R_STRIP_LINKER_OPTION.
-    # When we're done we'll add a line defining it as empty string (in case
-    # there are references to it elsewhere)
-    
-    if [ -f src/Makevars ]; then
-        while read -r LINE || [ -n "$LINE" ]; do
-            case "$LINE" in
-                *PKG_LIBS*=*R_STRIP_LINKER_OPTION*)
-                    LINE=${LINE% \$(R_STRIP_LINKER_OPTION)}
-                    echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
-                *R_STRIP_LINKER_OPTION=*) ;;
-                *) echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
-            esac
-        done <src/Makevars
-    fi
 fi
 
 # If we created a src/Makevars.R_STRIP_LINKER_OPTION file, then backup the
