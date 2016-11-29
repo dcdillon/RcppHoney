@@ -27,22 +27,40 @@ SHLIB_CXXLD_RESULTS=0
 
 if [ "$SHLIB_LD" != "" ]; then
     OUTPUT=`$SHLIB_LD --version`
+    LD_PROG=""
     
     case "$OUTPUT" in
-        *gcc*) SHLIB_LD_RESULTS=1 ;;
-        *g++*) SHLIB_LD_RESULTS=1 ;;
-        *clang*) SHLIB_LD_RESULTS=1 ;;
+        *gcc*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
+        *g++*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
+        *clang*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
     esac
+    
+    if [ "$LD_PROG" != "" ]; then
+        OUTPUT=`$LD_PROG --version`
+        case "$OUTPUT" in
+            GNU?ld*) SHLIB_LD_RESULTS=1 ;;
+            GNU?gold*) SHLIB_LD_RESULTS=1 ;;
+        esac
+    fi
 fi
 
 if [ "$SHLIB_CXXLD" != "" ]; then
     OUTPUT=`$SHLIB_CXXLD --version`
+    LD_PROG=""
     
     case "$OUTPUT" in
-        *gcc*) SHLIB_CXXLD_RESULTS=1 ;;
-        *g++*) SHLIB_CXXLD_RESULTS=1 ;;
-        *clang*) SHLIB_CXXLD_RESULTS=1 ;;
+        *gcc*) LD_PROG=`$SHLIB_CXXLD --print-prog-name=ld` ;;
+        *g++*) LD_PROG=`$SHLIB_CXXLD --print-prog-name=ld` ;;
+        *clang*) LD_PROG=`$SHLIB_CXXLD --print-prog-name=ld` ;;
     esac
+    
+    if [ "$LD_PROG" != "" ]; then
+        OUTPUT=`$LD_PROG --version`
+        case "$OUTPUT" in
+            GNU?ld*) SHLIB_CXXLD_RESULTS=1 ;;
+            GNU?gold*) SHLIB_CXXLD_RESULTS=1 ;;
+        esac
+    fi
 fi
 
 # Clean up any temporary files we created previously
