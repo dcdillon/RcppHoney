@@ -13,65 +13,72 @@
 # You should have received a copy of the GNU General Public License
 # along with r-stripper.  If not, see <http://www.gnu.org/licenses/>.
 
-# Interrogate R for what linkers it will use when compiling C/C++ code.
-
-
-if [ -z $R_HOME ]; then
-    R_HOME=${R RHOME}
-fi
-
-if [ "$R_HOME" == "" ]; then
-    echo "Could not find R_HOME."
-    exit 1
-fi
-
-SHLIB_LD=`$R_HOME/bin/R CMD config SHLIB_LD`
-SHLIB_CXXLD=`$R_HOME/bin/R CMD config SHLIB_CXXLD`
-
-# First run the commands defined by SHLIB_LD and SHLIB_CXXLD with --version
-# to get a description string.  If the string implies that this is a gcc
-# compatible linker, then set the appropriate results variable to 1
-
-SHLIB_LD_RESULTS=0
-SHLIB_CXXLD_RESULTS=0
-
-if [ "$SHLIB_LD" != "" ]; then
-    OUTPUT=`$SHLIB_LD --version`
-    LD_PROG=""
-    
-    case "$OUTPUT" in
-        *gcc*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
-        *g++*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
-        *clang*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
-    esac
-    
-    if [ "$LD_PROG" != "" ]; then
-        OUTPUT=`$LD_PROG --version`
+check_supported_linker()
+{
+    if [ "$1" != "" ]; then
+        OUTPUT=`$1 --version`
         case "$OUTPUT" in
-            GNU?ld*) SHLIB_LD_RESULTS=1 ;;
-            GNU?gold*) SHLIB_LD_RESULTS=1 ;;
+            GNU?ld*) return 0 ;;
+            GNU?gold*) return 0 ;;
         esac
     fi
-fi
+}
 
-if [ "$SHLIB_CXXLD" != "" ]; then
-    OUTPUT=`$SHLIB_CXXLD --version`
-    LD_PROG=""
-    
-    case "$OUTPUT" in
-        *gcc*) LD_PROG=`$SHLIB_CXXLD --print-prog-name=ld` ;;
-        *g++*) LD_PROG=`$SHLIB_CXXLD --print-prog-name=ld` ;;
-        *clang*) LD_PROG=`$SHLIB_CXXLD --print-prog-name=ld` ;;
-    esac
-    
-    if [ "$LD_PROG" != "" ]; then
-        OUTPUT=`$LD_PROG --version`
-        case "$OUTPUT" in
-            GNU?ld*) SHLIB_CXXLD_RESULTS=1 ;;
-            GNU?gold*) SHLIB_CXXLD_RESULTS=1 ;;
-        esac
+check_supported_linker_command()
+{
+    if [ "$1" != "" ]; then
+        # First see if it's a linker in its own right
+        check_supported_linker $1
+        RETURN_CODE=$?
+
+        if [ $RETURN_CODE -ne 0 ]; then
+            OUTPUT=`$1 --version`
+
+            OUTPUT=`$SHLIB_LD --version`
+            LD_PROG=""
+        
+            case "$OUTPUT" in
+                *gcc*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
+                *g++*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
+                *clang*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
+            esac
+
+            if [ "$LD_PROG" != "" ]; then
+                check_supported_linker $LD_PROG
+                RETURN_CODE=$?
+                return $RETURN_CODE
+            fi
+        else
+            return 0
+        fi
     fi
-fi
+
+    return 1
+}
+
+# Takes the R config variable that describes this linker as the only
+# argument (e.g. SHLIB_LD).  Returns 0 on success, 1 otherwise.
+check_linker()
+{
+    if [ -z $R_HOME ]; then
+        R_HOME=`R RHOME`
+    fi
+
+    if [ "$R_HOME" == "" ]; then
+        echo "Could not find R_HOME."
+        exit 1
+    fi
+
+    LINK_COMMAND=`$R_HOME/bin/R CMD config $1`
+
+    if [ "$LINK_COMMAND" != "" ]; then
+        check_supported_linker_command $LINK_COMMAND
+        RETURN_CODE=$?
+        return $?
+    fi
+
+    return 1
+}
 
 # Clean up any temporary files we created previously
 
@@ -80,9 +87,8 @@ rm -f src/Makevars.R_STRIP_LINKER_OPTION
 # If both SHLIB_LD and SHLIB_CXXLD are gcc compatible, then we can use the
 # -Wl,-S option to strip debugging symbols out of the shared library we create.
 # If not, then we'll need set R_STRIP_LINKER_OPTION to an empty string.
-
-if [ $SHLIB_LD_RESULTS -eq 1 ] && [ $SHLIB_CXXLD_RESULTS -eq 1 ]; then
-    echo "GCC compatible linkers found."
+if [ test `check_linker "SHLIB_LD"` ] && [ test `check_linker "SHLIB_CXXLD"` ]; then
+    echo "GNU compatible linkers found."
     
     # If there is a pre-existing Makevars file, go through it and remove the
     # line where we assign to R_STRIP_LINKER_OPTION.  Also, if there is already
