@@ -15,8 +15,13 @@
 
 # Interrogate R for what linkers it will use when compiling C/C++ code.
 
-SHLIB_LD=`R CMD config SHLIB_LD`
-SHLIB_CXXLD=`R CMD config SHLIB_CXXLD`
+if [ "$R_HOME" != "" ]; then
+    SHLIB_LD=`$R_HOME/bin/R CMD config SHLIB_LD`
+    SHLIB_CXXLD=`$R_HOME/bin/R CMD config SHLIB_CXXLD`
+else
+    SHLIB_LD=`R CMD config SHLIB_LD`
+    SHLIB_CXXLD=`R CMD config SHLIB_CXXLD`
+fi
 
 # First run the commands defined by SHLIB_LD and SHLIB_CXXLD with --version
 # to get a description string.  If the string implies that this is a gcc
