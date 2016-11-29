@@ -22,6 +22,8 @@ check_supported_linker()
             GNU?gold*) return 0 ;;
         esac
     fi
+
+    return 1
 }
 
 check_supported_linker_command()
@@ -34,13 +36,13 @@ check_supported_linker_command()
         if [ $RETURN_CODE -ne 0 ]; then
             OUTPUT=`$1 --version`
 
-            OUTPUT=`$SHLIB_LD --version`
+            OUTPUT=`$1 --version`
             LD_PROG=""
         
             case "$OUTPUT" in
-                *gcc*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
-                *g++*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
-                *clang*) LD_PROG=`$SHLIB_LD --print-prog-name=ld` ;;
+                *gcc*) LD_PROG=`$1 --print-prog-name=ld` ;;
+                *g++*) LD_PROG=`$1 --print-prog-name=ld` ;;
+                *clang*) LD_PROG=`$1 --print-prog-name=ld` ;;
             esac
 
             if [ "$LD_PROG" != "" ]; then
