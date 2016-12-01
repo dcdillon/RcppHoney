@@ -97,11 +97,17 @@ rm -f src/Makevars.R_STRIP_LINKER_OPTION
 # Set the string we want to pass
 ARGUMENT=""
 
-check_linker "SHLIB_LD"
-SHLIB_LD_RESULT=$?
+if [ "$1" = "fail" ]; then
+   check_linker "F77"
+   SHLIB_LD_RESULT=$?
+   SHLIB_CXXLD_RESULT=$?
+else
+    check_linker "SHLIB_LD"
+    SHLIB_LD_RESULT=$?
 
-check_linker "SHLIB_CXXLD"
-SHLIB_CXXLD_RESULT=$?
+    check_linker "SHLIB_CXXLD"
+    SHLIB_CXXLD_RESULT=$?
+fi
 
 if [ $SHLIB_LD_RESULT -eq $SHLIB_CXXLD_RESULT ]; then
     if [ $SHLIB_LD_RESULT -eq 1 ]; then
