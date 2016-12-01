@@ -74,9 +74,9 @@ check_linker()
         R_HOME=`R RHOME`
     fi
 
-    if [ "$R_HOME" == "" ]; then
+    if [ "$R_HOME" = "" ]; then
         echo "Could not find R_HOME."
-        exit 1
+        exit 0
     fi
 
     LINK_COMMAND=`$R_HOME/bin/R CMD config $1`
