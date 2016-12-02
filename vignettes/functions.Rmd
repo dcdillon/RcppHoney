@@ -2,7 +2,10 @@
 title: "Adding a Custom Function to RcppHoney"
 author: Daniel C. Dillon
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  html_vignette:
+    toc: true
+    toc_depth: 4
 vignette: >
   %\VignetteIndexEntry{RcppHoney - Custom Functions}
   %\VignetteEngine{knitr::rmarkdown}

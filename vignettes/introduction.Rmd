@@ -2,7 +2,10 @@
 title: "RcppHoney Introduction"
 author: Daniel C. Dillon
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  html_vignette:
+    toc: true
+    toc_depth: 4
 vignette: >
   %\VignetteIndexEntry{RcppHoney Introduction}
   %\VignetteEngine{knitr::rmarkdown}
