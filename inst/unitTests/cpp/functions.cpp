@@ -299,3 +299,44 @@ Rcpp::NumericVector test_cummax_matrix(Rcpp::NumericMatrix m) {
 Rcpp::NumericVector test_cummax_operand(Rcpp::NumericMatrix m) {
     return Rcpp::wrap(RcppHoney::cummax(RcppHoney::log(m)));
 }
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix test_cbind_vector_scalar(std::vector< double > v,
+    double s) {
+
+    return Rcpp::wrap(RcppHoney::cbind(v, s));
+}
+// [[Rcpp::export]]
+Rcpp::NumericMatrix test_cbind_scalar_vector(double s,
+    std::vector< double > v) {
+
+    return Rcpp::wrap(RcppHoney::cbind(s, v));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix test_cbind_vector_vector(std::vector< double > v1,
+    Rcpp::NumericVector v2) {
+
+    return Rcpp::wrap(RcppHoney::cbind(v1, v2));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix test_cbind_matrix_vector(Rcpp::NumericMatrix m,
+    std::vector< double > v) {
+
+    return Rcpp::wrap(RcppHoney::cbind(m, v));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix test_cbind_vector_matrix(std::vector< double > v,
+    Rcpp::NumericMatrix m) {
+
+    return Rcpp::wrap(RcppHoney::cbind(v, m));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix test_cbind_matrix_matrix(Rcpp::NumericMatrix m1,
+    Rcpp::NumericMatrix m2) {
+
+    return Rcpp::wrap(RcppHoney::cbind(m1, m2));
+}
