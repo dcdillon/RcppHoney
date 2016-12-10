@@ -22,6 +22,7 @@
 #include "traits/ctype.hpp"
 #include "na.hpp"
 #include "exceptions.hpp"
+#include "scalar_operator.hpp"
 
 namespace RcppHoney {
 
@@ -177,9 +178,19 @@ public:
                 m_rhsEnd(rhsEnd) {
                     
         if (lhsDims.first == -1) {
-            throw bounds_exception();
+            if (rhsDims.first > 0) {
+                m_dims.first = rhsDims.first
+                    + ((rhsDims.second == 0) ? 1 : rhsDims.second);
+            } else {
+                throw bounds_exception();
+            }
         } else if (rhsDims.first == -1) {
-            throw bounds_exception();
+            if (lhsDims.first > 0) {
+                m_dims.first = lhsDims.first
+                    + ((lhsDims.second == 0) ? 1 : lhsDims.second);
+            } else {
+                throw bounds_exception();
+            }
         } else if (lhsDims.second == 0 && rhsDims.second == 0) {
             if (lhsDims.first == rhsDims.first) {
                 m_dims.first = lhsDims.first;
@@ -237,5 +248,99 @@ struct make_cbinder
                 rhs.begin(), rhs.end(), hooks::extract_dims(rhs));
     }
 };
+
+template< typename T, typename T_ITER, typename T_RESULT, typename U,
+    typename U_ITER, typename U_RESULT >
+RcppHoney::cbinder< T_ITER, U_ITER, (T::NA || U::NA) >
+cbind(const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs,
+    const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {
+    return RcppHoney::make_cbinder< (T::NA || U::NA) >()(lhs, rhs);
+}
+template< typename T, typename T_ITER, typename T_RESULT, typename U >
+typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< U >::value,
+    RcppHoney::cbinder< T_ITER, typename RcppHoney::scalar_operator< U >::const_iterator, T::NA >
+    >::type
+cbind(const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs, const U &rhs) {
+    return RcppHoney::make_cbinder< T::NA >()(lhs, RcppHoney::make_scalar_operator()(rhs, lhs.dims().first));
+}
+template< typename T, typename U, typename U_ITER, typename U_RESULT >
+typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< T >::value,
+    RcppHoney::cbinder< typename RcppHoney::scalar_operator< T >::const_iterator, U_ITER, U::NA >
+    >::type
+cbind(const T &lhs, const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {
+    return RcppHoney::make_cbinder< U::NA >()(RcppHoney::make_scalar_operator()(lhs, rhs.dims().first), rhs);
+}
+template< typename T, typename U >
+typename RcppHoney::traits::enable_if<
+    (RcppHoney::hook< T >::value && RcppHoney::hook< U >::value),
+    RcppHoney::cbinder<
+        typename RcppHoney::hook< T >::const_iterator,
+        typename RcppHoney::hook< U >::const_iterator,
+        (RcppHoney::hook< T >::NA || RcppHoney::hook< U >::NA)
+    >
+>::type
+cbind(const T &lhs, const U &rhs) {
+    return RcppHoney::make_cbinder< (RcppHoney::hook< T >::NA || RcppHoney::hook< U >::NA) >()(
+        lhs,
+        rhs);
+}
+template< typename T, typename T_ITER, typename T_RESULT, typename U >
+typename RcppHoney::traits::enable_if< RcppHoney::hook< U >::value,
+    RcppHoney::cbinder<
+        T_ITER,
+        typename RcppHoney::hook< U >::const_iterator,
+        (T::NA || RcppHoney::hook< U >::NA)
+    >
+>::type
+cbind(const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs, const U &rhs) {
+    return RcppHoney::make_cbinder< (T::NA || RcppHoney::hook< U >::NA) >()(
+        lhs,
+        rhs);
+}
+template< typename T, typename U, typename U_ITER, typename U_RESULT >
+typename RcppHoney::traits::enable_if< RcppHoney::hook< T >::value,
+    RcppHoney::cbinder<
+        typename RcppHoney::hook< T >::const_iterator,
+        U_ITER,
+        (U::NA || RcppHoney::hook< T >::NA)
+    >
+>::type
+cbind(const T &lhs, const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {
+    return RcppHoney::make_cbinder< (U::NA || RcppHoney::hook< T >::NA) >()(
+        lhs,
+        rhs);
+}
+template< typename T, typename U >
+typename RcppHoney::traits::enable_if<
+    RcppHoney::traits::is_primitive< T >::value
+    && RcppHoney::hook< U >::value,
+    RcppHoney::cbinder<
+        typename RcppHoney::scalar_operator< T >::const_iterator,
+        typename RcppHoney::hook< U >::const_iterator,
+        RcppHoney::hook< U >::NA
+    >
+>::type
+cbind(const T &lhs, const U &rhs) {
+    dims_t dims = RcppHoney::hooks::extract_dims(rhs);
+    return RcppHoney::make_cbinder< RcppHoney::hook< U >::NA >()(
+        RcppHoney::make_scalar_operator()(lhs, dims.first),
+        rhs);
+}
+template< typename T, typename U >
+typename RcppHoney::traits::enable_if<
+    RcppHoney::traits::is_primitive< U >::value
+    && RcppHoney::hook< T >::value,
+    RcppHoney::cbinder<
+        typename RcppHoney::hook< T >::const_iterator,
+        typename RcppHoney::scalar_operator< U >::const_iterator,
+        RcppHoney::hook< T >::NA
+    >
+>::type
+cbind(const T &lhs, const U &rhs) {
+    dims_t dims = RcppHoney::hooks::extract_dims(lhs);
+    return RcppHoney::make_cbinder< RcppHoney::hook< T >::NA >()(
+        lhs,
+        RcppHoney::make_scalar_operator()(rhs, dims.first));
+}
     
 } // namespace RcppHoney

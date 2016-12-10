@@ -313,8 +313,6 @@ _FNAME_ (const T &lhs, const U &rhs) {                                          
         RcppHoney::make_scalar_operator()(rhs));                                                                       \
 }
 
-RCPP_HONEY_GENERATE_BINARY_OPERAND(cbind, cbinder)
-
 RCPP_HONEY_GENERATE_UNARY_FUNCTION(log, log)
 RCPP_HONEY_GENERATE_UNARY_FUNCTION(exp, exp)
 RCPP_HONEY_GENERATE_UNARY_FUNCTION(sqrt, sqrt)

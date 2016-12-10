@@ -216,6 +216,8 @@ test.cbind <- function() {
     m1 <- matrix(1:10, 2, 5)
     m2 <- matrix(11:20, 2, 5)
     
+    checkEquals(unname(cbind(1, v2)), test_cbind_scalar_vector(1, v2))
+    checkEquals(unname(cbind(v1, 1)), test_cbind_vector_scalar(v1, 1))
     checkEquals(unname(cbind(v1, v2)), test_cbind_vector_vector(v1, v2))
     checkEquals(unname(cbind(m1, v3)), test_cbind_matrix_vector(m1, v3))
     checkEquals(unname(cbind(v3, m1)), test_cbind_vector_matrix(v3, m1))

@@ -301,6 +301,19 @@ Rcpp::NumericVector test_cummax_operand(Rcpp::NumericMatrix m) {
 }
 
 // [[Rcpp::export]]
+Rcpp::NumericMatrix test_cbind_vector_scalar(std::vector< double > v,
+    double s) {
+
+    return Rcpp::wrap(RcppHoney::cbind(v, s));
+}
+// [[Rcpp::export]]
+Rcpp::NumericMatrix test_cbind_scalar_vector(double s,
+    std::vector< double > v) {
+
+    return Rcpp::wrap(RcppHoney::cbind(s, v));
+}
+
+// [[Rcpp::export]]
 Rcpp::NumericMatrix test_cbind_vector_vector(std::vector< double > v1,
     Rcpp::NumericVector v2) {
 
