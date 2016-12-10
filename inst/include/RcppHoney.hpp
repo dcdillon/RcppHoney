@@ -19,6 +19,9 @@
 
 #include "RcppHoneyForward.hpp"
 #include <Rcpp.h>
+#include "RcppHoney/hook.hpp"
+#include "RcppHoney/bind.hpp"
 #include "RcppHoney/operators.hpp"
 #include "RcppHoney/functions.hpp"
 #include "RcppHoney/storage.hpp"
+
