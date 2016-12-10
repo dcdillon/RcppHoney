@@ -425,7 +425,13 @@ template< typename T, typename T_ITER, typename T_RESULT >
 Rcpp::Vector< rtype< T_RESULT >::value > cummax(
     const operand< T, T_ITER, T_RESULT > &val) {
 
-    T_RESULT previous = std::numeric_limits< T_RESULT >::min();
+    T_RESULT previous;
+    
+    if (std::numeric_limits< T_RESULT >::is_integer) {
+        previous = std::numeric_limits< T_RESULT >::min() + 1;
+    } else {
+        previous = -std::numeric_limits< T_RESULT >::max();
+    }
     
     const dims_t dims = hooks::extract_dims(val);
     uint64_t size = 0;
@@ -634,7 +640,13 @@ typename traits::enable_if<
         typename std::iterator_traits< typename T::iterator >::value_type
      >::type result_type;
      
-    result_type previous = std::numeric_limits< result_type >::min();
+    result_type previous;
+    
+    if (std::numeric_limits< result_type >::is_integer) {
+        previous = std::numeric_limits< result_type >::min() + 1;
+    } else {
+        previous = -std::numeric_limits< result_type >::max();
+    }
     
     const dims_t dims = hooks::extract_dims(val);
     uint64_t size = 0;
