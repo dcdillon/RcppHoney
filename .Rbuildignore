@@ -4,3 +4,4 @@
 ^doxygen.*$
 ^Doxyfile$
 ^README.md$
+^src/Makevars\.R_STRIP_LINKER_OPTION\.bak$

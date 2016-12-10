@@ -301,4 +301,386 @@ diff(const T &rhs) {
         functors::diff< typename hook< T >::const_iterator, hook< T >::NA >());
 }
 
+template< typename T, typename T_ITER, typename T_RESULT >
+Rcpp::Vector< rtype< T_RESULT >::value > cumsum(
+    const operand< T, T_ITER, T_RESULT > &val) {
+
+    T_RESULT previous = 0;
+    
+    const dims_t dims = hooks::extract_dims(val);
+    uint64_t size = 0;
+    
+    if (dims.second == 0) {
+        size = dims.first;
+    } else {
+        size = dims.first * dims.second;
+    }
+    
+    typename Rcpp::Vector< rtype< T_RESULT >::value > vec(size);
+    
+    typename operand< T, T_ITER, T_RESULT >::const_iterator i = val.begin();
+    typename operand< T, T_ITER, T_RESULT >::const_iterator iend = val.end();
+    typename Rcpp::Vector< rtype< T_RESULT >::value >::iterator current
+        = vec.begin();
+    
+    for ( ; i != iend; ++i, ++current)
+    {
+        const T_RESULT value = *i;
+        
+        if (na< typename traits::ctype< T_RESULT >::type >::is_na(value)
+            || na< typename traits::ctype< T_RESULT >::type >::is_na(
+                previous)) {
+            previous = na< T_RESULT >::VALUE();
+        } else {
+            previous += value;
+        }
+        
+        *current = previous;
+    }
+    
+    return vec;
+}
+
+template< typename T, typename T_ITER, typename T_RESULT >
+Rcpp::Vector< rtype< T_RESULT >::value > cumprod(
+    const operand< T, T_ITER, T_RESULT > &val) {
+
+    T_RESULT previous = 1;
+    
+    const dims_t dims = hooks::extract_dims(val);
+    uint64_t size = 0;
+    
+    if (dims.second == 0) {
+        size = dims.first;
+    } else {
+        size = dims.first * dims.second;
+    }
+    
+    typename Rcpp::Vector< rtype< T_RESULT >::value > vec(size);
+    
+    typename operand< T, T_ITER, T_RESULT >::const_iterator i = val.begin();
+    typename operand< T, T_ITER, T_RESULT >::const_iterator iend = val.end();
+    typename Rcpp::Vector< rtype< T_RESULT >::value >::iterator current
+        = vec.begin();
+    
+    for ( ; i != iend; ++i, ++current)
+    {
+        const T_RESULT value = *i;
+        
+        if (na< typename traits::ctype< T_RESULT >::type >::is_na(value)
+            || na< typename traits::ctype< T_RESULT >::type >::is_na(
+                previous)) {
+            previous = na< T_RESULT >::VALUE();
+        } else {
+            previous *= value;
+        }
+        
+        *current = previous;
+    }
+    
+    return vec;
+}
+
+template< typename T, typename T_ITER, typename T_RESULT >
+Rcpp::Vector< rtype< T_RESULT >::value > cummin(
+    const operand< T, T_ITER, T_RESULT > &val) {
+
+    T_RESULT previous = std::numeric_limits< T_RESULT >::max();
+    
+    const dims_t dims = hooks::extract_dims(val);
+    uint64_t size = 0;
+    
+    if (dims.second == 0) {
+        size = dims.first;
+    } else {
+        size = dims.first * dims.second;
+    }
+    
+    typename Rcpp::Vector< rtype< T_RESULT >::value > vec(size);
+    
+    typename operand< T, T_ITER, T_RESULT >::const_iterator i = val.begin();
+    typename operand< T, T_ITER, T_RESULT >::const_iterator iend = val.end();
+    typename Rcpp::Vector< rtype< T_RESULT >::value >::iterator current
+        = vec.begin();
+    
+    for ( ; i != iend; ++i, ++current)
+    {
+        const T_RESULT value = *i;
+        
+        if (na< typename traits::ctype< T_RESULT >::type >::is_na(value)
+            || na< typename traits::ctype< T_RESULT >::type >::is_na(
+                previous)) {
+            previous = na< T_RESULT >::VALUE();
+        } else {
+            previous = std::min(previous, value);
+        }
+        
+        *current = previous;
+    }
+    
+    return vec;
+}
+
+template< typename T, typename T_ITER, typename T_RESULT >
+Rcpp::Vector< rtype< T_RESULT >::value > cummax(
+    const operand< T, T_ITER, T_RESULT > &val) {
+
+    T_RESULT previous;
+    
+    if (std::numeric_limits< T_RESULT >::is_integer) {
+        previous = std::numeric_limits< T_RESULT >::min() + 1;
+    } else {
+        previous = -std::numeric_limits< T_RESULT >::max();
+    }
+    
+    const dims_t dims = hooks::extract_dims(val);
+    uint64_t size = 0;
+    
+    if (dims.second == 0) {
+        size = dims.first;
+    } else {
+        size = dims.first * dims.second;
+    }
+    
+    typename Rcpp::Vector< rtype< T_RESULT >::value > vec(size);
+    
+    typename operand< T, T_ITER, T_RESULT >::const_iterator i = val.begin();
+    typename operand< T, T_ITER, T_RESULT >::const_iterator iend = val.end();
+    typename Rcpp::Vector< rtype< T_RESULT >::value >::iterator current
+        = vec.begin();
+    
+    for ( ; i != iend; ++i, ++current)
+    {
+        const T_RESULT value = *i;
+        
+        if (na< typename traits::ctype< T_RESULT >::type >::is_na(value)
+            || na< typename traits::ctype< T_RESULT >::type >::is_na(
+                previous)) {
+            previous = na< T_RESULT >::VALUE();
+        } else {
+            previous = std::max(previous, value);
+        }
+        
+        *current = previous;
+    }
+    
+    return vec;
+}
+
+
+template< typename T >
+typename traits::enable_if<
+    hook< T >::value,
+    Rcpp::Vector<
+        rtype<
+            typename traits::ctype<
+                typename std::iterator_traits< typename T::iterator >::value_type
+             >::type
+        >::value
+    >
+>::type cumsum(const T &val) {
+
+    typedef typename traits::ctype<
+        typename std::iterator_traits< typename T::iterator >::value_type
+     >::type result_type;
+     
+    result_type previous = 0;
+    
+    const dims_t dims = hooks::extract_dims(val);
+    uint64_t size = 0;
+    
+    if (dims.second == 0) {
+        size = dims.first;
+    } else {
+        size = dims.first * dims.second;
+    }
+    
+    Rcpp::Vector< rtype< result_type >::value > vec(size);
+    
+    typename T::const_iterator i = val.begin();
+    typename T::const_iterator iend = val.end();
+    typename Rcpp::Vector< rtype< result_type >::value >::iterator current
+        = vec.begin();
+    
+    for ( ; i != iend; ++i, ++current)
+    {
+        const result_type value = *i;
+        
+        if (na< typename traits::ctype< result_type >::type >::is_na(value)
+            || na< typename traits::ctype< result_type >::type >::is_na(
+                previous)) {
+            previous = na< result_type >::VALUE();
+        } else {
+            previous += value;
+        }
+        
+        *current = previous;
+    }
+    
+    return vec;
+}
+
+template< typename T >
+typename traits::enable_if<
+    hook< T >::value,
+    Rcpp::Vector<
+        rtype<
+            typename traits::ctype<
+                typename std::iterator_traits< typename T::iterator >::value_type
+             >::type
+        >::value
+    >
+>::type cumprod(const T &val) {
+
+    typedef typename traits::ctype<
+        typename std::iterator_traits< typename T::iterator >::value_type
+     >::type result_type;
+     
+    result_type previous = 1;
+    
+    const dims_t dims = hooks::extract_dims(val);
+    uint64_t size = 0;
+    
+    if (dims.second == 0) {
+        size = dims.first;
+    } else {
+        size = dims.first * dims.second;
+    }
+    
+    Rcpp::Vector< rtype< result_type >::value > vec(size);
+    
+    typename T::const_iterator i = val.begin();
+    typename T::const_iterator iend = val.end();
+    typename Rcpp::Vector< rtype< result_type >::value >::iterator current
+        = vec.begin();
+    
+    for ( ; i != iend; ++i, ++current)
+    {
+        const result_type value = *i;
+        
+        if (na< typename traits::ctype< result_type >::type >::is_na(value)
+            || na< typename traits::ctype< result_type >::type >::is_na(
+                previous)) {
+            previous = na< result_type >::VALUE();
+        } else {
+            previous *= value;
+        }
+        
+        *current = previous;
+    }
+    
+    return vec;
+}
+
+template< typename T >
+typename traits::enable_if<
+    hook< T >::value,
+    Rcpp::Vector<
+        rtype<
+            typename traits::ctype<
+                typename std::iterator_traits< typename T::iterator >::value_type
+             >::type
+        >::value
+    >
+>::type cummin(const T &val) {
+
+    typedef typename traits::ctype<
+        typename std::iterator_traits< typename T::iterator >::value_type
+     >::type result_type;
+     
+    result_type previous = std::numeric_limits< result_type >::max();
+    
+    const dims_t dims = hooks::extract_dims(val);
+    uint64_t size = 0;
+    
+    if (dims.second == 0) {
+        size = dims.first;
+    } else {
+        size = dims.first * dims.second;
+    }
+    
+    Rcpp::Vector< rtype< result_type >::value > vec(size);
+    
+    typename T::const_iterator i = val.begin();
+    typename T::const_iterator iend = val.end();
+    typename Rcpp::Vector< rtype< result_type >::value >::iterator current
+        = vec.begin();
+    
+    for ( ; i != iend; ++i, ++current)
+    {
+        const result_type value = *i;
+        
+        if (na< typename traits::ctype< result_type >::type >::is_na(value)
+            || na< typename traits::ctype< result_type >::type >::is_na(
+                previous)) {
+            previous = na< result_type >::VALUE();
+        } else {
+            previous = std::min(previous, value);
+        }
+        
+        *current = previous;
+    }
+    
+    return vec;
+}
+
+template< typename T >
+typename traits::enable_if<
+    hook< T >::value,
+    Rcpp::Vector<
+        rtype<
+            typename traits::ctype<
+                typename std::iterator_traits< typename T::iterator >::value_type
+             >::type
+        >::value
+    >
+>::type cummax(const T &val) {
+
+    typedef typename traits::ctype<
+        typename std::iterator_traits< typename T::iterator >::value_type
+     >::type result_type;
+     
+    result_type previous;
+    
+    if (std::numeric_limits< result_type >::is_integer) {
+        previous = std::numeric_limits< result_type >::min() + 1;
+    } else {
+        previous = -std::numeric_limits< result_type >::max();
+    }
+    
+    const dims_t dims = hooks::extract_dims(val);
+    uint64_t size = 0;
+    
+    if (dims.second == 0) {
+        size = dims.first;
+    } else {
+        size = dims.first * dims.second;
+    }
+    
+    Rcpp::Vector< rtype< result_type >::value > vec(size);
+    
+    typename T::const_iterator i = val.begin();
+    typename T::const_iterator iend = val.end();
+    typename Rcpp::Vector< rtype< result_type >::value >::iterator current
+        = vec.begin();
+    
+    for ( ; i != iend; ++i, ++current)
+    {
+        const result_type value = *i;
+        
+        if (na< typename traits::ctype< result_type >::type >::is_na(value)
+            || na< typename traits::ctype< result_type >::type >::is_na(
+                previous)) {
+            previous = na< result_type >::VALUE();
+        } else {
+            previous = std::max(previous, value);
+        }
+        
+        *current = previous;
+    }
+    
+    return vec;
+}
+
+
 } // namespace RcppHoney

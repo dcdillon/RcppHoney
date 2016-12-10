@@ -239,3 +239,63 @@ Rcpp::NumericVector test_round(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
 Rcpp::NumericVector test_signif(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
     return Rcpp::wrap(RcppHoney::signif(v1, v2));
 }
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cumsum(Rcpp::NumericVector v) {
+    return Rcpp::wrap(RcppHoney::cumsum(v));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cumsum_matrix(Rcpp::NumericMatrix m) {
+    return Rcpp::wrap(RcppHoney::cumsum(m));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cumsum_operand(Rcpp::NumericMatrix m) {
+    return Rcpp::wrap(RcppHoney::cumsum(RcppHoney::log(m)));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cumprod(Rcpp::NumericVector v) {
+    return Rcpp::wrap(RcppHoney::cumprod(v));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cumprod_matrix(Rcpp::NumericMatrix m) {
+    return Rcpp::wrap(RcppHoney::cumprod(m));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cumprod_operand(Rcpp::NumericMatrix m) {
+    return Rcpp::wrap(RcppHoney::cumprod(RcppHoney::log(m)));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cummin(Rcpp::NumericVector v) {
+    return Rcpp::wrap(RcppHoney::cummin(v));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cummin_matrix(Rcpp::NumericMatrix m) {
+    return Rcpp::wrap(RcppHoney::cummin(m));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cummin_operand(Rcpp::NumericMatrix m) {
+    return Rcpp::wrap(RcppHoney::cummin(RcppHoney::log(m)));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cummax(Rcpp::NumericVector v) {
+    return Rcpp::wrap(RcppHoney::cummax(v));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cummax_matrix(Rcpp::NumericMatrix m) {
+    return Rcpp::wrap(RcppHoney::cummax(m));
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector test_cummax_operand(Rcpp::NumericMatrix m) {
+    return Rcpp::wrap(RcppHoney::cummax(RcppHoney::log(m)));
+}
