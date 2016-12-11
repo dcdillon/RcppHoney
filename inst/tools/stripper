@@ -90,9 +90,73 @@ check_linker()
     return 0
 }
 
-# Clean up any temporary files we created previously
-
-rm -f src/Makevars.R_STRIP_LINKER_OPTION
+# Takes an argument with the name of the Makevars file to modify (assuming it
+# is in src/ and modifies it accordingly.  If the second parameter is set to
+# "create-if-missing" it will create the file if it is not already there.
+modify_makevars()
+{
+    MAKEVARS_FILE="$1"
+    CREATE_IF_MISSING="$2"
+    
+    # Clean up any temporary files we created previously
+    rm -f src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION
+    
+    # If there is a pre-existing Makevars file, go through it and remove the
+    # line where we assign to R_STRIP_LINKER_OPTION.  Also, if there is already
+    # a line that assigns to PKG_LIBS, make sure it adds
+    # $(R_STRIP_LINKER_OPTION) to the end.  Store the results in
+    # src/Makevars.R_STRIP_LINKER_OPTION
+    
+    FOUND_PKG_LIBS_ASSIGNMENT=0
+    
+    if [ -f "src/$MAKEVARS_FILE" ]; then
+        while read -r LINE || [ -n "$LINE" ]; do
+            case "$LINE" in
+                *PKG_LIBS*=*)
+                    case "$LINE" in
+                        *R_STRIP_LINKER_OPTION*)
+                            echo $LINE >> src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION ;;
+                        *)
+                            echo "$LINE \$(R_STRIP_LINKER_OPTION)" \
+                                >> src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION ;;
+                    esac
+                    FOUND_PKG_LIBS_ASSIGNMENT=1
+                    ;;
+                *R_STRIP_LINKER_OPTION*) ;;
+                *) echo $LINE >> src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION ;;
+            esac
+        done <src/$MAKEVARS_FILE
+        
+        # Place the proper value in R_STRIP_LINKER_OPTION
+        echo "R_STRIP_LINKER_OPTION=\"$ARGUMENT\"" \
+            >> src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION
+        
+        # If there wasn't an assignment to PKG_LIBS already in place, then we need
+        # to add one to get our R_STRIP_LINKER_OPTION in there.
+        
+        if [ $FOUND_PKG_LIBS_ASSIGNMENT -eq 0 ]; then
+            echo "PKG_LIBS = \$(R_STRIP_LINKER_OPTION)" \
+                >> src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION
+        fi
+    elif [ "$CREATE_IF_MISSING" = "create-if-missing" ]; then
+        # Place the proper value in R_STRIP_LINKER_OPTION
+        echo "R_STRIP_LINKER_OPTION=\"$ARGUMENT\"" \
+            >> src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION
+        echo "PKG_LIBS = \$(R_STRIP_LINKER_OPTION)" \
+            >> src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION
+    fi
+    
+    if [ -f src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION ]; then
+        if [ -f src/$MAKEVARS_FILE ]; then
+            mv src/$MAKEVARS_FILE src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION.bak
+        fi
+        
+        mv src/$MAKEVARS_FILE.R_STRIP_LINKER_OPTION src/$MAKEVARS_FILE
+    fi
+    
+    # This function always suceeds (even if it does nothing)
+    return 0
+}
 
 # Set the string we want to pass
 ARGUMENT=""
@@ -123,54 +187,6 @@ fi
 if [ "$ARGUMENT" != "" ]; then
     echo "Compatible linkers found."
     
-    # If there is a pre-existing Makevars file, go through it and remove the
-    # line where we assign to R_STRIP_LINKER_OPTION.  Also, if there is already
-    # a line that assigns to PKG_LIBS, make sure it adds
-    # $(R_STRIP_LINKER_OPTION) to the end.  Store the results in
-    # src/Makevars.R_STRIP_LINKER_OPTION
-    
-    FOUND_PKG_LIBS_ASSIGNMENT=0
-    
-    if [ -f src/Makevars ]; then
-        while read -r LINE || [ -n "$LINE" ]; do
-            case "$LINE" in
-                *PKG_LIBS*=*)
-                    case "$LINE" in
-                        *R_STRIP_LINKER_OPTION*)
-                            echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
-                        *)
-                            echo "$LINE \$(R_STRIP_LINKER_OPTION)" \
-                                >> src/Makevars.R_STRIP_LINKER_OPTION ;;
-                    esac
-                    FOUND_PKG_LIBS_ASSIGNMENT=1
-                    ;;
-                *R_STRIP_LINKER_OPTION*) ;;
-                *) echo $LINE >> src/Makevars.R_STRIP_LINKER_OPTION ;;
-            esac
-        done <src/Makevars
-    fi
-    
-    # Place the proper value in R_STRIP_LINKER_OPTION
-    
-    echo "R_STRIP_LINKER_OPTION=\"$ARGUMENT\"" \
-        >> src/Makevars.R_STRIP_LINKER_OPTION
-    
-    # If there wasn't an assignment to PKG_LIBS already in place, then we need
-    # to add one to get our R_STRIP_LINKER_OPTION in there.
-    
-    if [ $FOUND_PKG_LIBS_ASSIGNMENT -eq 0 ]; then
-        echo "PKG_LIBS = \$(R_STRIP_LINKER_OPTION)" \
-            >> src/Makevars.R_STRIP_LINKER_OPTION
-    fi
-fi
-
-# If we created a src/Makevars.R_STRIP_LINKER_OPTION file, then backup the
-# current Makevars file and rename our modified version to Makevars.
-
-if [ -f src/Makevars.R_STRIP_LINKER_OPTION ]; then
-    if [ -f src/Makevars ]; then
-        mv src/Makevars src/Makevars.R_STRIP_LINKER_OPTION.bak
-    fi
-    
-    mv src/Makevars.R_STRIP_LINKER_OPTION src/Makevars
+    modify_makevars Makevars create-if-missing
+    modify_makevars Makevars.win
 fi
