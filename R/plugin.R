@@ -21,13 +21,14 @@
 # that the linker needs or empty string if it is unknown.
 .getLinkerOptions <- function(cmd) {
   if (cmd != "") {
-    output <- system(paste0(cmd, " --version"), intern=TRUE)
+    output <- system(paste0(cmd, " --version 2>&1"), intern=TRUE)
     
     if (grepl("^GNU ld", output[1])) {
       return("-S")
     } else if (grepl("^GNU gold", output[1])) {
       return("-S")
-    }
+    } else if (grepl("Solaris Link Editors", output[1])) {
+      return("-zstrip-class=debug")
   }
   
   return("")
