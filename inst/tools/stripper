@@ -20,10 +20,11 @@
 check_supported_linker()
 {
     if [ "$1" != "" ]; then
-        OUTPUT=`$1 --version`
+        OUTPUT=`$1 --version 2>&1`
         case "$OUTPUT" in
             GNU?ld*) return 1 ;;
             GNU?gold*) return 1 ;;
+            *Solaris?Link?Editors*) return 3 ;;
         esac
     fi
 
@@ -44,6 +45,8 @@ check_supported_linker_command()
 
         if [ $RETURN_CODE -eq 1 ]; then
             return 2
+        elif [ $RETURN_CODE -eq 3 ]; then
+            return 4
         elif [ $RETURN_CODE -eq 0 ]; then
             OUTPUT=`$1 --version`
             LD_PROG=""
@@ -178,6 +181,10 @@ if [ $SHLIB_LD_RESULT -eq $SHLIB_CXXLD_RESULT ]; then
         ARGUMENT="-Wl,-S"
     elif [ $SHLIB_LD_RESULT -eq 2 ]; then
         ARGUMENT="-S"
+    elif [ $SHLIB_LD_RESULT -eq 3 ]; then
+        ARGUMENT="-Wl,-zstrip-class=debug"
+    elif [ $SHLIB_LD_RESULT -eq 4 ]; then
+        ARGUMENT="-zstrip-class=debug"
     fi
 fi
 
