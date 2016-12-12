@@ -29,6 +29,7 @@
       return("-S")
     } else if (grepl("Solaris Link Editors", output[1])) {
       return("-zstrip-class=debug")
+    }
   }
   
   return("")
