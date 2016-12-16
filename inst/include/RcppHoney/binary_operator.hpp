@@ -26,8 +26,12 @@
 
 namespace RcppHoney {
 
-template< typename LhsIterator, typename RhsIterator, typename Op, bool NA_VALUE >
-struct binary_operator_iterator : public std::iterator< std::bidirectional_iterator_tag, typename Op::return_type > {
+template< typename LhsIterator, typename RhsIterator, typename Op,
+    bool NA_VALUE >
+struct binary_operator_iterator : public std::iterator<
+    std::bidirectional_iterator_tag,
+    typename Op::return_type
+> {
 private:
     LhsIterator m_lhsPos;
     RhsIterator m_rhsPos;
@@ -38,8 +42,9 @@ private:
 public:
     inline binary_operator_iterator() : m_dirty(true), m_operator(NULL) {}
 
-    inline binary_operator_iterator(const LhsIterator &lhsPos, const RhsIterator &rhsPos, const Op *op)
-        : m_lhsPos(lhsPos), m_rhsPos(rhsPos), m_dirty(true), m_operator(op) {}
+    inline binary_operator_iterator(const LhsIterator &lhsPos,
+        const RhsIterator &rhsPos, const Op *op) : m_lhsPos(lhsPos),
+            m_rhsPos(rhsPos), m_dirty(true), m_operator(op) {}
 
     inline typename Op::return_type operator*() {
        if (m_dirty) {
@@ -86,19 +91,34 @@ public:
     }
 };
 
-template< typename LhsIterator, typename RhsIterator, typename Op, bool NA_VALUE >
+template< typename LhsIterator, typename RhsIterator, typename Op,
+    bool NA_VALUE >
 struct binary_operator_result_type {
     typedef typename Op::return_type result_type;
 };
 
 template< typename LhsIterator, typename RhsIterator, typename Op, bool NA_VALUE >
-class binary_operator : public operand< binary_operator< LhsIterator, RhsIterator, Op, NA_VALUE >, binary_operator_iterator< LhsIterator, RhsIterator, Op, NA_VALUE >, typename binary_operator_result_type< LhsIterator, RhsIterator, Op, NA_VALUE >::result_type > {
+class binary_operator : public operand<
+    binary_operator< LhsIterator, RhsIterator, Op, NA_VALUE >,
+    binary_operator_iterator< LhsIterator, RhsIterator, Op, NA_VALUE >,
+    typename binary_operator_result_type<
+        LhsIterator,
+        RhsIterator,
+        Op,
+        NA_VALUE
+    >::result_type
+> {
 public:
     typedef typename Op::return_type result_type;
     static const bool NA = NA_VALUE;
 
 public:
-    typedef binary_operator_iterator< LhsIterator, RhsIterator, Op, NA_VALUE > const_iterator;
+    typedef binary_operator_iterator<
+        LhsIterator,
+        RhsIterator,
+        Op,
+        NA_VALUE
+    > const_iterator;
     typedef const_iterator iterator;
 
 private:
@@ -123,20 +143,32 @@ public:
         return (m_dims.second != 0) ? m_dims.first * m_dims.second
             : m_dims.first;
     }
-    const_iterator begin() const {return const_iterator(m_lhsBegin, m_rhsBegin, &m_operator);}
-    const_iterator end() const {return const_iterator(m_lhsEnd, m_rhsEnd, &m_operator);}
+    const_iterator begin() const {
+        return const_iterator(m_lhsBegin, m_rhsBegin, &m_operator);
+    }
+    
+    const_iterator end() const {
+        return const_iterator(m_lhsEnd, m_rhsEnd, &m_operator);
+    }
 };
 
 template< bool NA >
 struct make_binary_operator
 {
     template< typename LHS, typename RHS, typename Op >
-    binary_operator< typename LHS::const_iterator, typename RHS::const_iterator, Op, NA > operator()(const LHS &lhs, const RHS &rhs, const Op &op) {
-
-        return binary_operator< typename LHS::const_iterator, typename RHS::const_iterator, Op, NA >(
-                lhs.begin(), lhs.end(), hooks::extract_dims(lhs),
-                rhs.begin(), rhs.end(), hooks::extract_dims(rhs),
-                op);
+    binary_operator<
+        typename LHS::const_iterator,
+        typename RHS::const_iterator,
+        Op,
+        NA
+    > operator()(const LHS &lhs, const RHS &rhs, const Op &op) {
+        return binary_operator<
+            typename LHS::const_iterator,
+            typename RHS::const_iterator,
+            Op,
+            NA
+        >(lhs.begin(), lhs.end(), hooks::extract_dims(lhs), rhs.begin(),
+            rhs.end(), hooks::extract_dims(rhs), op);
     }
 };
 

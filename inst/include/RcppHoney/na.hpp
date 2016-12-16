@@ -19,6 +19,7 @@
 
 #include <Rinternals.h>
 #include <Rmath.h>
+#include "traits/ctype.hpp"
 
 namespace RcppHoney {
 
@@ -49,5 +50,16 @@ template<>
 struct rtype< double > {
     static const int value = REALSXP;
 };
+
+template< typename T >
+bool is_na(const T &lhs) {
+    return na< typename traits::ctype< T >::type >::is_na(lhs);
+}
+
+template< typename T, typename U >
+bool either_na(const T &lhs, const U &rhs) {
+    return na< typename traits::ctype< T >::type >::is_na(lhs)
+        || na< typename traits::ctype< U >::type >::is_na(rhs);
+}
 
 } // namespace RcppHoney

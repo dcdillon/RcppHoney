@@ -26,7 +26,11 @@
 namespace RcppHoney {
 
 template< typename InputIterator, typename Op, bool NA_VALUE >
-struct unary_operator_iterator : public std::iterator< std::bidirectional_iterator_tag, typename Op::return_type > {
+struct unary_operator_iterator
+    : public std::iterator<
+          std::bidirectional_iterator_tag,
+          typename Op::return_type
+      > {
 private:
     InputIterator m_pos;
     typename Op::return_type m_value;
@@ -36,7 +40,8 @@ private:
 public:
     inline unary_operator_iterator() : m_dirty(true) {}
 
-    inline unary_operator_iterator(const InputIterator &pos, const Op &op) : m_pos(pos), m_dirty(true), m_operator(op) {}
+    inline unary_operator_iterator(const InputIterator &pos, const Op &op)
+        : m_pos(pos), m_dirty(true), m_operator(op) {}
 
     inline typename Op::return_type operator*() {
        if (m_dirty) {
@@ -86,13 +91,32 @@ struct unary_operator_result_type {
 };
 
 template< typename InputIterator, typename Op, bool NA_VALUE >
-class unary_operator : public operand< unary_operator< InputIterator, Op, NA_VALUE >, unary_operator_iterator< InputIterator, Op, NA_VALUE >, typename unary_operator_result_type< InputIterator, Op, NA_VALUE >::result_type > {
+class unary_operator
+    : public operand<
+          unary_operator< InputIterator, Op, NA_VALUE >,
+          unary_operator_iterator< InputIterator, Op, NA_VALUE >,
+          typename unary_operator_result_type<
+              InputIterator,
+              Op,
+              NA_VALUE
+          >::result_type
+      > {
 public:
-    typedef typename unary_operator_result_type< InputIterator, Op, NA_VALUE >::result_type result_type;
+    typedef typename unary_operator_result_type<
+        InputIterator,
+        Op,
+        NA_VALUE
+    >::result_type result_type;
+    
     static const bool NA = NA_VALUE;
 
 public:
-    typedef unary_operator_iterator< InputIterator, Op, NA_VALUE > const_iterator;
+    typedef unary_operator_iterator<
+        InputIterator,
+        Op,
+        NA_VALUE
+    > const_iterator;
+    
     typedef const_iterator iterator;
 
 private:
@@ -102,12 +126,14 @@ private:
     Op m_operator;
 
 public:
-    unary_operator(const InputIterator &begin, const InputIterator &end, dims_t dims, const Op &op) :
-        m_begin(begin), m_end(end), m_dims(op.result_dims(dims)), m_operator(op)
+    unary_operator(const InputIterator &begin, const InputIterator &end,
+        dims_t dims, const Op &op) : m_begin(begin), m_end(end),
+            m_dims(op.result_dims(dims)), m_operator(op)
     {
     }
 
     dims_t dims() const {return m_dims;}
+    
     int64_t size() const {
         return (m_dims.second != 0) ? m_dims.first * m_dims.second
             : m_dims.first;
@@ -119,8 +145,10 @@ public:
 template< bool NA >
 struct make_unary_operator {
     template< typename T, typename Op >
-    unary_operator< typename T::const_iterator, Op, NA > operator()(const T &obj, const Op &op) {
-        return unary_operator< typename T::const_iterator, Op, NA >(obj.begin(), obj.end(), hooks::extract_dims(obj), op);
+    unary_operator< typename T::const_iterator, Op, NA > operator()(
+        const T &obj, const Op &op) {
+        return unary_operator< typename T::const_iterator, Op, NA >(obj.begin(),
+            obj.end(), hooks::extract_dims(obj), op);
     }
 };
 

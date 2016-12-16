@@ -15,52 +15,72 @@ Rcpp::NumericVector test_unary_function_operand(std::vector< int > v) {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_hooked_scalar(std::vector< int > v1, double s) {
+Rcpp::NumericVector test_binary_function_hooked_scalar(std::vector< int > v1,
+    double s) {
+
     return Rcpp::wrap(RcppHoney::pow(v1, s));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_scalar_hooked(double s, std::vector< int > v1) {
+Rcpp::NumericVector test_binary_function_scalar_hooked(double s,
+    std::vector< int > v1) {
+
     return Rcpp::wrap(RcppHoney::pow(s, v1));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_hooked_hooked(std::vector< int > v1, std::vector< int > v2) {
+Rcpp::NumericVector test_binary_function_hooked_hooked(std::vector< int > v1,
+    std::vector< int > v2) {
+
     return Rcpp::wrap(RcppHoney::pow(v1, v2));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_hooked_other_hooked(std::vector< int > v1, Rcpp::NumericVector v2) {
+Rcpp::NumericVector test_binary_function_hooked_other_hooked(
+    std::vector< int > v1, Rcpp::NumericVector v2) {
+
     return Rcpp::wrap(RcppHoney::pow(v1, v2));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_other_hooked_hooked(Rcpp::NumericVector v1, std::vector< int > v2) {
+Rcpp::NumericVector test_binary_function_other_hooked_hooked(
+    Rcpp::NumericVector v1, std::vector< int > v2) {
+
     return Rcpp::wrap(RcppHoney::pow(v1, v2));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_operand_scalar(std::vector< int > v1, std::vector< int > v2, double s) {
+Rcpp::NumericVector test_binary_function_operand_scalar(std::vector< int > v1,
+    std::vector< int > v2, double s) {
+
     return Rcpp::wrap(RcppHoney::pow(v1 + v2, s));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_scalar_operand(double s, std::vector< int > v1, std::vector< int > v2) {
+Rcpp::NumericVector test_binary_function_scalar_operand(double s,
+    std::vector< int > v1, std::vector< int > v2) {
+
     return Rcpp::wrap(RcppHoney::pow(s, v1 + v2));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_operand_hooked(std::vector< int > v1, std::vector< int > v2, Rcpp::NumericVector v3) {
+Rcpp::NumericVector test_binary_function_operand_hooked(std::vector< int > v1,
+    std::vector< int > v2, Rcpp::NumericVector v3) {
+
     return Rcpp::wrap(RcppHoney::pow(v1 + v2, v3));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_hooked_operand(Rcpp::NumericVector v1, std::vector< int > v2, std::vector< int > v3) {
+Rcpp::NumericVector test_binary_function_hooked_operand(Rcpp::NumericVector v1,
+    std::vector< int > v2, std::vector< int > v3) {
+
     return Rcpp::wrap(RcppHoney::pow(v1, v2 + v3));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_binary_function_operand_operand(std::vector< int > v1, std::vector< int > v2) {
+Rcpp::NumericVector test_binary_function_operand_operand(std::vector< int > v1,
+    std::vector< int > v2) {
+
     return Rcpp::wrap(RcppHoney::pow(v1 + v2, v2 + v2));
 }
 
@@ -201,17 +221,23 @@ Rcpp::NumericVector test_diff(Rcpp::NumericVector v) {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_pow(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
+Rcpp::NumericVector test_pow(Rcpp::NumericVector v1,
+    Rcpp::NumericVector v2) {
+
     return Rcpp::wrap(RcppHoney::pow(v1, v2));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_choose(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
+Rcpp::NumericVector test_choose(Rcpp::NumericVector v1,
+    Rcpp::NumericVector v2) {
+
     return Rcpp::wrap(RcppHoney::choose(v1, v2));
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_lchoose(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
+Rcpp::NumericVector test_lchoose(Rcpp::NumericVector v1,
+    Rcpp::NumericVector v2) {
+
     return Rcpp::wrap(RcppHoney::lchoose(v1, v2));
 }
 
@@ -226,7 +252,9 @@ Rcpp::NumericVector test_lbeta(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_psigamma(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
+Rcpp::NumericVector test_psigamma(Rcpp::NumericVector v1,
+    Rcpp::NumericVector v2) {
+
     return Rcpp::wrap(RcppHoney::psigamma(v1, v2));
 }
 
@@ -236,7 +264,9 @@ Rcpp::NumericVector test_round(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test_signif(Rcpp::NumericVector v1, Rcpp::NumericVector v2) {
+Rcpp::NumericVector test_signif(Rcpp::NumericVector v1,
+    Rcpp::NumericVector v2) {
+
     return Rcpp::wrap(RcppHoney::signif(v1, v2));
 }
 

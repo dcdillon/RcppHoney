@@ -34,7 +34,8 @@ typedef std::pair< uint64_t, uint64_t > dims_t;
 template< typename T, typename T_ITER, typename T_RESULT >
 class operand;
 
-template< typename LhsIterator, typename RhsIterator, typename Op, bool NA_VALUE >
+template< typename LhsIterator, typename RhsIterator, typename Op,
+    bool NA_VALUE >
 class binary_operator;
 
 namespace hooks {

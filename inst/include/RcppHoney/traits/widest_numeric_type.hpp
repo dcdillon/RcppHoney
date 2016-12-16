@@ -53,7 +53,8 @@ struct numeric_index< Rcomplex > { static const char value = 8; };
 template< typename LHS, typename RHS >
 struct widest_numeric_type {
     typedef typename if_else<
-        (numeric_index< typename ctype< LHS >::type >::value > numeric_index< typename ctype< RHS >::type >::value),
+        (numeric_index< typename ctype< LHS >::type >::value
+            > numeric_index< typename ctype< RHS >::type >::value),
         typename ctype< LHS >::type,
         typename ctype< RHS >::type >::type type;
 };

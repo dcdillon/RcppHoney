@@ -39,43 +39,82 @@ template< std::size_t I >
 struct ctype_helper { static const bool value = false; };
 
 template<>
-struct ctype_helper< sizeof(CTYPE_CHAR) > { typedef char type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_CHAR) > {
+    typedef char type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_SHORT) > { typedef short type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_SHORT) > {
+    typedef short type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_INT) > { typedef int type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_INT) > {
+    typedef int type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_LONG) > { typedef long type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_LONG) > {
+    typedef long type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_FLOAT) > { typedef float type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_FLOAT) > {
+    typedef float type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_DOUBLE) > { typedef double type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_DOUBLE) > {
+    typedef double type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_LONG_DOUBLE) > { typedef long double type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_LONG_DOUBLE) > {
+    typedef long double type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_STRING) > { typedef std::string type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_STRING) > {
+    typedef std::string type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_UNSIGNED_CHAR) > { typedef unsigned char type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_UNSIGNED_CHAR) > {
+    typedef unsigned char type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_UNSIGNED_SHORT) > { typedef unsigned short type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_UNSIGNED_SHORT) > {
+    typedef unsigned short type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_UNSIGNED_INT) > { typedef unsigned int type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_UNSIGNED_INT) > {
+    typedef unsigned int type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_UNSIGNED_LONG) > { typedef unsigned long type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_UNSIGNED_LONG) > {
+    typedef unsigned long type;
+    static const bool value = true;
+};
 
 template<>
-struct ctype_helper< sizeof(CTYPE_RCOMPLEX) > { typedef Rcomplex type; static const bool value = true; };
+struct ctype_helper< sizeof(CTYPE_RCOMPLEX) > {
+    typedef Rcomplex type;
+    static const bool value = true;
+};
 
 template< typename T >
 struct ctype

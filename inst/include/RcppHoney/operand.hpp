@@ -59,15 +59,14 @@ public:
     
         if (dim.second == 0) {
             Rcpp::Shield< SEXP > x(Rf_allocVector(RTYPE, size()));
-            std::copy(begin(), end(), Rcpp::internal::r_vector_start< RTYPE >(x));
-            //std::transform(obj.begin(), obj.end(), internal::r_vector_start< RTYPE >(x),
-            //    internal::caster< T, T_RESULT >);
+            std::copy(begin(), end(),
+                Rcpp::internal::r_vector_start< RTYPE >(x));
             return x;
         } else {
-            Rcpp::Shield< SEXP > x(Rf_allocMatrix(RTYPE, dim.first, dim.second));
-            std::copy(begin(), end(), Rcpp::internal::r_vector_start< RTYPE >(x));
-            //std::transform(obj.begin(), obj.end(), internal::r_vector_start< RTYPE >(x),
-            //    internal::caster< T, T_RESULT >);
+            Rcpp::Shield< SEXP > x(Rf_allocMatrix(RTYPE, dim.first,
+                dim.second));
+            std::copy(begin(), end(),
+                Rcpp::internal::r_vector_start< RTYPE >(x));
             return x;
         }
     }

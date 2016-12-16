@@ -31,13 +31,21 @@ class cbinder_result_type {
 public:
     typedef typename std::iterator_traits< LhsIterator >::value_type lhs_type;
     typedef typename std::iterator_traits< RhsIterator >::value_type rhs_type;
-    typedef typename traits::widest_numeric_type< lhs_type, rhs_type >::type result_type;
+    typedef typename traits::widest_numeric_type<
+        lhs_type,
+        rhs_type
+    >::type result_type;
 };
 
 template< typename LhsIterator, typename RhsIterator, bool NA_VALUE >
 class cbinder_iterator :
     public std::iterator< std::bidirectional_iterator_tag,
-        typename cbinder_result_type< LhsIterator, RhsIterator, NA_VALUE >::result_type >{
+        typename cbinder_result_type<
+            LhsIterator,
+            RhsIterator,
+            NA_VALUE
+        >::result_type
+    > {
             
 public:
     typedef typename cbinder_result_type< LhsIterator,
@@ -57,10 +65,11 @@ private:
 public:
     inline cbinder_iterator() : m_dirty(true), m_onLhs(true) {}
 
-    inline cbinder_iterator(const LhsIterator &lhsPos, const LhsIterator &lhsEnd,
-        const RhsIterator &rhsPos, const RhsIterator &rhsEnd)
-        : m_dirty(true), m_onLhs(lhsPos != lhsEnd), m_lhsPos(lhsPos), m_lhsEnd(lhsEnd),
-            m_rhsPos(rhsPos), m_rhsEnd(rhsEnd) {}
+    inline cbinder_iterator(const LhsIterator &lhsPos,
+        const LhsIterator &lhsEnd, const RhsIterator &rhsPos,
+            const RhsIterator &rhsEnd) : m_dirty(true),
+                m_onLhs(lhsPos != lhsEnd), m_lhsPos(lhsPos), m_lhsEnd(lhsEnd),
+                    m_rhsPos(rhsPos), m_rhsEnd(rhsEnd) {}
 
     inline result_type operator*() {
        if (m_dirty) {
@@ -68,7 +77,10 @@ public:
                if (NA_VALUE) {
                    lhs_type val = *m_lhsPos;
                    
-                   if (na< typename traits::ctype< lhs_type >::type >::is_na(val)) {
+                   if (na<
+                           typename traits::ctype< lhs_type >::type
+                       >::is_na(val)) {
+                   
                        m_value = na< result_type >::VALUE();
                    } else {
                        m_value = val;
@@ -80,7 +92,10 @@ public:
                if (NA_VALUE) {
                    rhs_type val = *m_rhsPos;
                    
-                   if (na< typename traits::ctype< rhs_type >::type >::is_na(val)) {
+                   if (na<
+                           typename traits::ctype< rhs_type >::type
+                       >::is_na(val)) {
+                   
                        m_value = na< result_type >::VALUE();
                    } else {
                        m_value = val;
@@ -154,14 +169,26 @@ public:
 };
     
 template< typename LhsIterator, typename RhsIterator, bool NA_VALUE >
-class cbinder : public operand< cbinder< LhsIterator, RhsIterator, NA_VALUE >,
-    cbinder_iterator< LhsIterator, RhsIterator, NA_VALUE >,
-    typename cbinder_result_type< LhsIterator, RhsIterator, NA_VALUE >::result_type > {
+class cbinder :
+    public operand<
+        cbinder< LhsIterator, RhsIterator, NA_VALUE >,
+        cbinder_iterator< LhsIterator, RhsIterator, NA_VALUE >,
+        typename cbinder_result_type<
+            LhsIterator,
+            RhsIterator,
+            NA_VALUE
+        >::result_type
+    > {
         
 public:
     typedef cbinder_iterator< LhsIterator, RhsIterator, NA_VALUE > const_iterator;
     typedef const_iterator iterator;
-    typedef typename cbinder_result_type< LhsIterator, RhsIterator, NA_VALUE >::result_type result_type;
+    typedef typename cbinder_result_type<
+        LhsIterator,
+        RhsIterator,
+        NA_VALUE
+    >::result_type result_type;
+    
     static const bool NA = NA_VALUE;
     
 private:
@@ -243,9 +270,12 @@ struct make_cbinder
     cbinder< typename LHS::const_iterator, typename RHS::const_iterator, NA >
         operator()(const LHS &lhs, const RHS &rhs) {
 
-        return cbinder< typename LHS::const_iterator, typename RHS::const_iterator, NA >(
-                lhs.begin(), lhs.end(), hooks::extract_dims(lhs),
-                rhs.begin(), rhs.end(), hooks::extract_dims(rhs));
+        return cbinder<
+            typename LHS::const_iterator,
+            typename RHS::const_iterator,
+            NA
+        >(lhs.begin(), lhs.end(), hooks::extract_dims(lhs), rhs.begin(),
+            rhs.end(), hooks::extract_dims(rhs));
     }
 };
 
@@ -256,20 +286,35 @@ cbind(const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs,
     const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {
     return RcppHoney::make_cbinder< (T::NA || U::NA) >()(lhs, rhs);
 }
+
 template< typename T, typename T_ITER, typename T_RESULT, typename U >
-typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< U >::value,
-    RcppHoney::cbinder< T_ITER, typename RcppHoney::scalar_operator< U >::const_iterator, T::NA >
-    >::type
+typename RcppHoney::traits::enable_if<
+    RcppHoney::traits::is_primitive< U >::value,
+    RcppHoney::cbinder<
+        T_ITER,
+        typename RcppHoney::scalar_operator< U >::const_iterator,
+        T::NA
+    >
+>::type
 cbind(const RcppHoney::operand< T, T_ITER, T_RESULT > &lhs, const U &rhs) {
-    return RcppHoney::make_cbinder< T::NA >()(lhs, RcppHoney::make_scalar_operator()(rhs, lhs.dims().first));
+    return RcppHoney::make_cbinder< T::NA >()(lhs,
+        RcppHoney::make_scalar_operator()(rhs, lhs.dims().first));
 }
+
 template< typename T, typename U, typename U_ITER, typename U_RESULT >
-typename RcppHoney::traits::enable_if< RcppHoney::traits::is_primitive< T >::value,
-    RcppHoney::cbinder< typename RcppHoney::scalar_operator< T >::const_iterator, U_ITER, U::NA >
-    >::type
+typename RcppHoney::traits::enable_if<
+    RcppHoney::traits::is_primitive< T >::value,
+    RcppHoney::cbinder<
+        typename RcppHoney::scalar_operator< T >::const_iterator,
+        U_ITER,
+        U::NA
+    >
+>::type
 cbind(const T &lhs, const RcppHoney::operand< U, U_ITER, U_RESULT > &rhs) {
-    return RcppHoney::make_cbinder< U::NA >()(RcppHoney::make_scalar_operator()(lhs, rhs.dims().first), rhs);
+    return RcppHoney::make_cbinder< U::NA >()(
+        RcppHoney::make_scalar_operator()(lhs, rhs.dims().first), rhs);
 }
+
 template< typename T, typename U >
 typename RcppHoney::traits::enable_if<
     (RcppHoney::hook< T >::value && RcppHoney::hook< U >::value),
@@ -280,9 +325,9 @@ typename RcppHoney::traits::enable_if<
     >
 >::type
 cbind(const T &lhs, const U &rhs) {
-    return RcppHoney::make_cbinder< (RcppHoney::hook< T >::NA || RcppHoney::hook< U >::NA) >()(
-        lhs,
-        rhs);
+    return RcppHoney::make_cbinder<
+        (RcppHoney::hook< T >::NA || RcppHoney::hook< U >::NA)
+    >()(lhs, rhs);
 }
 template< typename T, typename T_ITER, typename T_RESULT, typename U >
 typename RcppHoney::traits::enable_if< RcppHoney::hook< U >::value,

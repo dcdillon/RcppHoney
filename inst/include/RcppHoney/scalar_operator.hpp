@@ -25,7 +25,8 @@
 namespace RcppHoney {
 
 template< typename T >
-struct scalar_operator_iterator : public std::iterator< std::bidirectional_iterator_tag, T > {
+struct scalar_operator_iterator
+    : public std::iterator< std::bidirectional_iterator_tag, T > {
 private:
     T m_value;
     uint64_t m_count;
@@ -79,7 +80,12 @@ struct scalar_operator_result_type {
 };
 
 template< typename T >
-class scalar_operator : public operand< scalar_operator< T >, scalar_operator_iterator< T >, typename scalar_operator_result_type< T >::result_type > {
+class scalar_operator
+    : public operand<
+        scalar_operator< T >,
+        scalar_operator_iterator< T >,
+        typename scalar_operator_result_type< T >::result_type
+    > {
 public:
     typedef typename scalar_operator_result_type< T >::result_type result_type;
     static const bool NA = false;

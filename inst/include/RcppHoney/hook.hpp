@@ -47,11 +47,21 @@ dims_t extract_dims(const T &obj) {
 
 template< typename T, typename U = typename T::const_iterator >
 struct hook {
-    static const bool value = (sizeof(::RcppHoney::hooks::is_hooked(hooks::create_type< T >())) == sizeof(traits::true_type));
-    static const bool NA = sizeof(hooks::has_na(hooks::create_type< T >())) == sizeof(traits::true_type);
-    static const bool NEED_BASIC_OPERATORS = sizeof(hooks::needs_basic_operators(hooks::create_type< T>())) == sizeof(traits::true_type);
-    static const bool NEED_SCALAR_OPERATORS = sizeof(hooks::needs_scalar_operators(hooks::create_type< T >())) == sizeof(traits::true_type);
-    static const int FAMILY = sizeof(hooks::family(hooks::create_type< T >())) / sizeof(long); // this is suspect but should work
+    static const bool value =
+        (sizeof(::RcppHoney::hooks::is_hooked(hooks::create_type< T >()))
+            == sizeof(traits::true_type));
+    static const bool NA =
+        sizeof(hooks::has_na(hooks::create_type< T >()))
+            == sizeof(traits::true_type);
+    static const bool NEED_BASIC_OPERATORS =
+        sizeof(hooks::needs_basic_operators(hooks::create_type< T>()))
+            == sizeof(traits::true_type);
+    static const bool NEED_SCALAR_OPERATORS =
+        sizeof(hooks::needs_scalar_operators(hooks::create_type< T >()))
+            == sizeof(traits::true_type);
+    static const int FAMILY =
+        sizeof(hooks::family(hooks::create_type< T >())) / sizeof(long);
+        
     typedef U const_iterator;
 };
 

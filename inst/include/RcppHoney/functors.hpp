@@ -52,14 +52,22 @@ struct binary_result_dims
     
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct plus : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
-    typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
+    typedef typename traits::widest_numeric_type<
+        lhs_value_type,
+        rhs_value_type
+    >::type return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs + *rhs;
             }
 
@@ -72,14 +80,22 @@ struct plus : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct minus : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
-    typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
+    typedef typename traits::widest_numeric_type<
+        lhs_value_type,
+        rhs_value_type
+    >::type return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs - *rhs;
             }
 
@@ -92,14 +108,22 @@ struct minus : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct times : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
-    typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
+    typedef typename traits::widest_numeric_type<
+        lhs_value_type,
+        rhs_value_type
+    >::type return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs * *rhs;
             }
 
@@ -112,14 +136,22 @@ struct times : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct divided_by : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
-    typedef typename traits::widest_numeric_type< lhs_value_type, rhs_value_type >::type return_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
+    typedef typename traits::widest_numeric_type<
+        lhs_value_type,
+        rhs_value_type
+    >::type return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs / *rhs;
             }
 
@@ -133,13 +165,18 @@ struct divided_by : public binary_result_dims {
 template< typename LhsIterator, typename RhsIterator, bool NA >
 struct greater : public binary_result_dims {
     typedef int return_type;
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs > *rhs;
             }
 
@@ -153,13 +190,18 @@ struct greater : public binary_result_dims {
 template< typename LhsIterator, typename RhsIterator, bool NA >
 struct greater_equal : public binary_result_dims {
     typedef int return_type;
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs >= *rhs;
             }
 
@@ -173,13 +215,18 @@ struct greater_equal : public binary_result_dims {
 template< typename LhsIterator, typename RhsIterator, bool NA >
 struct less : public binary_result_dims {
     typedef int return_type;
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs < *rhs;
             }
 
@@ -193,13 +240,18 @@ struct less : public binary_result_dims {
 template< typename LhsIterator, typename RhsIterator, bool NA >
 struct less_equal : public binary_result_dims {
     typedef int return_type;
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs <= *rhs;
             }
 
@@ -213,13 +265,18 @@ struct less_equal : public binary_result_dims {
 template< typename LhsIterator, typename RhsIterator, bool NA >
 struct equal : public binary_result_dims {
     typedef int return_type;
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs == *rhs;
             }
 
@@ -233,13 +290,18 @@ struct equal : public binary_result_dims {
 template< typename LhsIterator, typename RhsIterator, bool NA >
 struct not_equal : public binary_result_dims {
     typedef int return_type;
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
-
+            if (!either_na(*lhs, *rhs)) {
                 return *lhs != *rhs;
             }
 
@@ -252,10 +314,13 @@ struct not_equal : public binary_result_dims {
 
 template< typename RhsIterator, bool NA = true >
 struct unary_minus : public unary_result_dims {
-    typedef typename std::iterator_traits< RhsIterator >::value_type return_type;
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type return_type;
+    
     inline return_type operator()(RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< return_type >::type >::is_na(*rhs)) {
+            if (!is_na(*rhs)) {
                 return -(*rhs);
             }
 
@@ -268,10 +333,13 @@ struct unary_minus : public unary_result_dims {
 
 template< typename RhsIterator, bool NA = true >
 struct unary_not : public unary_result_dims {
-    typedef typename std::iterator_traits< RhsIterator >::value_type return_type;
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type return_type;
+    
     inline return_type operator()(RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< return_type >::type >::is_na(*rhs)) {
+            if (!is_na(*rhs)) {
                 return !(*rhs);
             }
 
@@ -287,7 +355,7 @@ struct exp : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::exp(*rhs);
@@ -303,7 +371,7 @@ struct log : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::log(*rhs);
@@ -319,7 +387,7 @@ struct sqrt : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::sqrt(*rhs);
@@ -335,7 +403,7 @@ struct acos : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::acos(*rhs);
@@ -351,7 +419,7 @@ struct asin : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::asin(*rhs);
@@ -367,7 +435,7 @@ struct atan : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::atan(*rhs);
@@ -383,7 +451,7 @@ struct ceil : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::ceil(*rhs);
@@ -399,7 +467,7 @@ struct cos : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::cos(*rhs);
@@ -415,7 +483,7 @@ struct cosh : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::cosh(*rhs);
@@ -431,7 +499,7 @@ struct floor : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::floor(*rhs);
@@ -447,7 +515,7 @@ struct log10 : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::log10(*rhs);
@@ -463,7 +531,7 @@ struct sin : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::sin(*rhs);
@@ -479,7 +547,7 @@ struct sinh : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::sinh(*rhs);
@@ -495,7 +563,7 @@ struct tan : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::tan(*rhs);
@@ -511,7 +579,7 @@ struct tanh : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::tanh(*rhs);
@@ -527,7 +595,7 @@ struct abs : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::abs(*rhs);
@@ -543,7 +611,7 @@ struct gamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_gammafn(*rhs);
@@ -559,7 +627,7 @@ struct lgamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_lgammafn(*rhs);
@@ -575,7 +643,7 @@ struct digamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_digamma(*rhs);
@@ -591,7 +659,7 @@ struct trigamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_trigamma(*rhs);
@@ -607,7 +675,7 @@ struct tetragamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_tetragamma(*rhs);
@@ -623,7 +691,7 @@ struct pentagamma : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_pentagamma(*rhs);
@@ -641,7 +709,7 @@ struct expm1 : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::expm1(*rhs);
@@ -657,7 +725,7 @@ struct log1p : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return std::log1p(*rhs);
@@ -675,7 +743,7 @@ struct factorial : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_gammafn(*rhs + 1.0);
@@ -691,7 +759,7 @@ struct lfactorial : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_lgammafn(*rhs + 1.0);
@@ -707,7 +775,7 @@ struct trunc : public unary_result_dims {
     typedef double return_type;
     return_type operator()(Iterator &rhs) const {
         if (NA) {
-            if (na< typename traits::ctype< typename std::iterator_traits< Iterator >::value_type >::type >::is_na(*rhs)) {
+            if (is_na(*rhs)) {
                 return na< return_type >::VALUE();
             } else {
                 return ::Rf_ftrunc(*rhs);
@@ -732,8 +800,7 @@ struct diff {
         }
 
         if (NA) {
-            if (na< typename traits::ctype< return_type >::type >::is_na(*current)
-                || na< typename traits::ctype< return_type >::type >::is_na(m_previousValue)) {
+            if (either_na(*current, m_previousValue)) {
                 return na< return_type >::VALUE();
             } else {
                 const return_type retval = *current - m_previousValue;
@@ -761,14 +828,19 @@ private:
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct pow : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     typedef double return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return std::pow(*lhs, *rhs);
             }
 
@@ -781,14 +853,19 @@ struct pow : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct choose : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     typedef double return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return ::Rf_choose(*lhs, *rhs);
             }
 
@@ -801,14 +878,19 @@ struct choose : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct lchoose : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     typedef double return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return ::Rf_lchoose(*lhs, *rhs);
             }
 
@@ -821,14 +903,19 @@ struct lchoose : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct beta : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     typedef double return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return ::Rf_beta(*lhs, *rhs);
             }
 
@@ -841,14 +928,19 @@ struct beta : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct lbeta : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     typedef double return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return ::Rf_lbeta(*lhs, *rhs);
             }
 
@@ -861,14 +953,19 @@ struct lbeta : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct psigamma : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     typedef double return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return ::Rf_psigamma(*lhs, *rhs);
             }
 
@@ -881,14 +978,19 @@ struct psigamma : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct round : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     typedef double return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return ::Rf_fround(*lhs, *rhs);
             }
 
@@ -901,14 +1003,19 @@ struct round : public binary_result_dims {
 
 template< typename LhsIterator, typename RhsIterator, bool NA = true >
 struct signif : public binary_result_dims {
-    typedef typename std::iterator_traits< LhsIterator >::value_type lhs_value_type;
-    typedef typename std::iterator_traits< RhsIterator >::value_type rhs_value_type;
+    typedef typename std::iterator_traits<
+        LhsIterator
+    >::value_type lhs_value_type;
+    
+    typedef typename std::iterator_traits<
+        RhsIterator
+    >::value_type rhs_value_type;
+    
     typedef double return_type;
 
     inline return_type operator()(LhsIterator &lhs, RhsIterator &rhs) const {
         if (NA) {
-            if (!na< typename traits::ctype< lhs_value_type >::type >::is_na(*lhs)
-                && !na< typename traits::ctype< rhs_value_type >::type >::is_na(*rhs)) {
+            if (!either_na(*lhs, *rhs)) {
                 return ::Rf_fprec(*lhs, *rhs);
             }
 
