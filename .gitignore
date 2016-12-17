@@ -7,3 +7,4 @@ src/*.so
 src/*.dll
 src/symbols.rds
 src/Makevars.R_STRIP_LINKER_OPTION.bak
+doc
