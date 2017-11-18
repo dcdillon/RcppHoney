@@ -12,7 +12,7 @@ Description: Creates an easy way to use expression templates with R
 License: GPL (>= 2)
 LazyData: TRUE
 Imports:
-    Rcpp (>= 0.12.8)
+    Rcpp (>= 0.12.12)
 Suggests:
     RUnit,
     knitr,
