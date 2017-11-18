@@ -107,5 +107,5 @@
   return("")
 }
 
-inlineCxxPlugin <- Rcpp:::Rcpp.plugin.maker(
+inlineCxxPlugin <- Rcpp::Rcpp.plugin.maker(
     libs = .getUniversalStripLinkerOption())
